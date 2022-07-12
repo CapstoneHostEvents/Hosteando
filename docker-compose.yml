@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: api
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=1234
+      - DB=hosteando
+      - DB_USER=Hosteando
+      - SECRET_KEY=aleatorio
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+  
+  db:
+    container_name: db
+    image: postgres:14
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=userhosteando
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=hosteando
