@@ -11,6 +11,7 @@
     "test": "cross-env NODE_ENV=test jest"
   },
   "dependencies": {
+    "@types/uuid": "^8.3.4",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
@@ -19,6 +20,7 @@
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.7",
+    "uuid": "^8.3.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {
