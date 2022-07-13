@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn, Unique } from "typeorm"
-// import { User } from "./User"
 
 @Entity("event")
 
@@ -22,6 +21,8 @@ class Event {
 
   @CreateDateColumn()
   created_at: Date
+
+  
 
   // @OneToMany(type => User, user => user.student) user: user[]
 }

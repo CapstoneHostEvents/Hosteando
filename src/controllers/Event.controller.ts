@@ -8,12 +8,12 @@ export class CreateEventController {
     
     const newEvent = await CreateEventService({name, description, date})
 
-    return res.status(200).json(newEvent)
+    return res.status(201).json(newEvent)
   }
 
   static async read (req: Request, res: Response) {
     const events = await ListEventService()
 
-    return res.json(events)
+    return res.status(200).json(events)
   }
 } 

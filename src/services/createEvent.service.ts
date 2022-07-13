@@ -9,7 +9,6 @@ export const CreateEventService = async ({name, description, date } : IEventRequ
     name, 
     description, 
     date,
-    created_at: Date()
   })
 
   await eventRepository.save(event)
