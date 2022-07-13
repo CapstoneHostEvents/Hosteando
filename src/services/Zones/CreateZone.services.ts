@@ -16,8 +16,9 @@ export default class CreateZoneService {
 
     if (!event) throw new AppError("Event not found", 404);
 
-    if (zones.find((z) => z.name === name))
-      throw new AppError("Email already exists", 400);
+    if (zones.find((z) => z.name === name && z.event.id === eventId)) {
+      throw new AppError("Name alrealdy used for that event", 400);
+    }
 
     const zone = zoneRepository.create({
       name,
@@ -25,11 +26,9 @@ export default class CreateZoneService {
       total_tickets,
     });
 
+    zone.event = event;
+
     await zoneRepository.save(zone);
-
-    event.zones = [zone];
-
-    await eventRepository.save(event);
 
     return zone;
   }

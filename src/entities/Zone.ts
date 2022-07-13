@@ -27,7 +27,7 @@ export class Zone {
   @Column()
   total_tickets: number;
 
-  @ManyToOne(() => Event, (event) => event.zones)
+  @ManyToOne(() => Event, (event) => event.zones, { eager: true })
   event: Event;
 
   @OneToMany(() => Ticket, (ticket) => ticket.zone)

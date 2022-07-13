@@ -1,7 +1,9 @@
+import "dotenv/config";
 import express from "express";
+import "express-async-errors";
 import "reflect-metadata";
 import { errorHandler } from "./middlewares/express-error.middleware";
-import zoneRoutes from "./routers/zone.routes";
+import zoneRoutes from "./routers/Zone/zone.routes";
 
 const app = express();
 
