@@ -19,7 +19,7 @@ services:
       - .:/app
 
   db:
-    container_name: db
+    container_name: db_hosteando
     image: postgres:14
     ports:
       - 5432:5432

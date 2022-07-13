@@ -15,7 +15,7 @@ import { Ticket } from "./Tickets";
 
 @Entity("user")
 @Unique(["email"])
-export class User {
+class User {
   @PrimaryGeneratedColumn("uuid")
   readonly id: string;
 
@@ -49,3 +49,4 @@ export class User {
     }
   }
 }
+export { User };
