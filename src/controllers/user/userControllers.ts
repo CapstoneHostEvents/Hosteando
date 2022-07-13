@@ -9,7 +9,7 @@ import userUpdateService from "../../services/user/userUpdate.service";
 export default class UserController {
   //Criando User
   async store(req: Request, res: Response) {
-    const { isAdm, name, email, password } = req.body;
+    const { isAdm, name, email, password } = req.newUser;
     const createUser = await userCreateService({
       isAdm,
       name,
