@@ -25,7 +25,7 @@ export class Zone {
   price: number;
 
   @Column()
-  total_tickers: number;
+  total_tickets: number;
 
   @ManyToOne(() => Event, (event) => event.zones)
   event: Event;
