@@ -58,6 +58,12 @@ Configure your environment variables with your Postgres credentials.
 
 Create database as data entered in **.env**.
 
+Run:
+
+```
+yarn dev
+```
+
 ### 3.3. Migrations
 
 Run migrations with the command:
@@ -421,6 +427,130 @@ Content-type: application/json
 
 ## 4.2. **Event**
 
+[ Back to endpoints ](#4-endpoints)
+
+The Zone object is defined as:
+
+| Field       | Type   | Description                    |
+| ----------- | ------ | ------------------------------ |
+| id          | string | Event's unique identifier      |
+| name        | string | Username                       |
+| description | string | Description of the event       |
+| date        | string | Date of the event              |
+| created_by  | string | Admin responsible for creating |
+| created_at  | string | Event creation date            |
+
+## Endpoints
+
+| Method | Endpoint | Responsability  |
+| ------ | -------- | --------------- |
+| POST   | /zone    | Create event    |
+| GET    | /zone    | List all events |
+| PATCH  | /zone    | Update event    |
+| DELETE | /zone    | Delete event    |
+
+---
+
+### 4.2.1. **Create event**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/event`
+
+### Example of request:
+
+```
+POST /event
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+{
+  "name": "Rock in Rio",
+  "description": "Festival de música e entretenimento",
+  "date": "2022-07-12 12:48:23"
+}
+```
+
+### Example of response:
+
+```
+201 Created
+```
+
+```json
+{
+  "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+  "name": "Rock in Rio",
+  "description": "Festival de música e entretenimento",
+  "date": "2022-09-12 18:00:23",
+  "created_by": "78ejeodj79-7dje-79dj-mkm3-n6584522952",
+  "created_at": "2022-07-12 12:48:23"
+}
+```
+
+### Possible errors:
+
+| Error code      | Description               |
+| --------------- | ------------------------- |
+| 400 bad request | This event already exists |
+
+---
+
+### 4.2.2. **List all events**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/event`
+
+### Example of request:
+
+```
+GET /zone
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+    "name": "Camarote",
+    "price": 420.0,
+    "total_tickets": 850,
+    "eventId": "165gt191-41frg51-156-f41wsd56"
+  },
+
+  {
+    "id": "8mhtd28c4-e540-2w9r-ipa7-j86346d10986",
+    "name": "Pista",
+    "price": 90.0,
+    "total_tickets": 6800,
+    "eventId": "165gt191-41frg51-156-f41wsd56"
+  }
+]
+```
+
+### Possible errors:
+
+None, the maximum that can return an empty list.
+
 ---
 
 ## 4.3. **Zone**
@@ -429,13 +559,13 @@ Content-type: application/json
 
 The Zone object is defined as:
 
-| Field         | Type   | Description                           |
-| ------------- | ------ | ------------------------------------- |
-| id            | string | Zone's unique identifier              |
-| name          | string | Username                              |
-| price         | number | Ticket value in the zone              |
-| total_tickets | number | Número total de ingressos disponíveis |
-| eventId       | string | Relationship with event id            |
+| Field         | Type   | Description                       |
+| ------------- | ------ | --------------------------------- |
+| id            | string | Zone's unique identifier          |
+| name          | string | Username                          |
+| price         | number | Ticket value in the zone          |
+| total_tickets | number | Total number of tickets available |
+| eventId       | string | Relationship with event id        |
 
 ## Endpoints
 
