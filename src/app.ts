@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/event', EventRoutes)
+app.use("/event", EventRoutes);
 
 app.use("/zones", zoneRoutes);
 app.use("/users", userRouter);

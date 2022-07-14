@@ -7,6 +7,8 @@ import RetrieveZoneService from "../../services/Zones/RetrieveZone.services";
 export default class ZoneController {
   async store(req: Request, res: Response) {
     const { name, price, total_tickets, eventId } = req.body;
+    const userId = req.user.id;
+
     const createZoneService = new CreateZoneService();
 
     const zone = await createZoneService.execute({
@@ -14,6 +16,7 @@ export default class ZoneController {
       price,
       total_tickets,
       eventId,
+      userId,
     });
 
     return res.status(201).json(zone);

@@ -27,7 +27,7 @@ export class Event {
   @Column()
   date: Date;
 
-  @ManyToOne(() => User, (user) => user.events)
+  @ManyToOne(() => User, (user) => user.events, { eager: true })
   user: User;
 
   @OneToMany(() => Zone, (zone) => zone.event)
