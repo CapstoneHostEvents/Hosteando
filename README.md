@@ -2,13 +2,13 @@
 
 ## Contents
 
-- [Overview](#1-visão-geral)
-- [ER Diagram](#2-diagrama-er)
-- [Quick Start](#3-início-rápido)
-  - [Installing Dependencies](#31-instalando-dependências)
-  - [Environment variables](#32-variáveis-de-ambiente)
+- [Overview](#1-overview)
+- [ER Diagram](#2-er-diagram)
+- [Quick Start](#3-quick-start)
+  - [Installing Dependencies](#31-installing-dependencies)
+  - [Environment variables](#32-environment-variables)
   - [Migrations](#33-migrations)
-- [Endpoints](#5-endpoints)
+- [Endpoints](#4-endpoints)
 
 ---
 
@@ -56,6 +56,8 @@ yarn
 Then, create a file **.env**, copying file format **.env.example**.
 Configure your environment variables with your Postgres credentials.
 
+Create database as data entered in **.env**.
+
 ### 3.3. Migrations
 
 Run migrations with the command:
@@ -78,7 +80,7 @@ yarn typeorm migration:run -d src/data-source.ts
   - [GET - /user/me](#413-list-user-by-id)
   - [PATCH - /user](#414-update-user-data)
   - [DELETE - /user](#415-delete-user)
-  - [POST - /user/login](#416-login-user)
+  - [POST - /user/login](#416-login)
 - [Event](#42-event)
   - [POST - /event](#421-create-event)
   - [GET - /event](#422-list-all-events)
@@ -87,9 +89,10 @@ yarn typeorm migration:run -d src/data-source.ts
 - [Zone](#43-zone)
   - [POST - /zone](#431-create-zone)
   - [GET - /zone](#432-list-all-zones)
-  - [GET - /zone/<event_id>](#433-list-all-zones-by-event)
-  - [PATCH - /zone](#434-update-zone)
-  - [DELETE - /zone](#435-delete-zone)
+  - [GET - /zone/<zone_id>](#433-list-zone-by-id)
+  - [GET - /zone/event/<event_id>](#434-list-all-zones-by-event)
+  - [PATCH - /zone](#435-update-zone)
+  - [DELETE - /zone](#436-delete-zone)
 - [Ticket](#44-ticket)
   - [POST - /ticket](#441-buy-ticket)
   - [GET - /ticket](#442-list-all-tickets)
@@ -164,7 +167,8 @@ Content-type: application/json
   "name": "Ana",
   "email": "ana@mail.com",
   "isAdm": true,
-  "created_at": "2022-07-12 10:00:01"
+  "created_at": "2022-07-12 10:00:01",
+  "update_at": "2022-07-12 12:48:23"
 }
 ```
 
@@ -178,7 +182,7 @@ Content-type: application/json
 
 ### 4.1.2. **List all users**
 
-[ Back to endpoints ](#5-endpoints)
+[ Back to endpoints ](#4-endpoints)
 
 ### `/user`
 
@@ -226,7 +230,7 @@ None, the maximum that can return an empty list.
 
 ---
 
-### 4.1.3. **List the user with the corresponding id**
+### 4.1.3. **List user by id**
 
 [ Back to endpoints ](#4-endpoints)
 
@@ -303,8 +307,7 @@ Content-type: application/json
   "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
   "name": "Ana Paula",
   "email": "ana@mail.com",
-  "isAdm": true,
-  "update_at": "2022-07-12 12:48:23"
+  "isAdm": true
 }
 ```
 
@@ -319,7 +322,8 @@ Content-type: application/json
   "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
   "name": "Ana Paula",
   "email": "ana@mail.com",
-  "isAdm": true
+  "isAdm": true,
+  "update_at": "2022-07-12 12:48:23"
 }
 ```
 
@@ -331,7 +335,7 @@ Content-type: application/json
 
 ---
 
-### 4.1.5. **Delete user from database**
+### 4.1.5. **Delete user**
 
 [ Back to endpoints ](#4-endpoints)
 
@@ -425,13 +429,13 @@ Content-type: application/json
 
 The Zone object is defined as:
 
-| Field         | Type   | Description              |
-| ------------- | ------ | ------------------------ |
-| id            | string | Zone's unique identifier |
-| name          | string | Username                 |
-| price         | number |                          |
-| total_tickets | number |                          |
-| eventId       | string |                          |
+| Field         | Type   | Description                           |
+| ------------- | ------ | ------------------------------------- |
+| id            | string | Zone's unique identifier              |
+| name          | string | Username                              |
+| price         | number | Ticket value in the zone              |
+| total_tickets | number | Número total de ingressos disponíveis |
+| eventId       | string | Relationship with event id            |
 
 ## Endpoints
 
@@ -443,6 +447,218 @@ The Zone object is defined as:
 | GET    | /zone/event/<event_id> | List all zones from of an event         |
 | PATCH  | /zone                  | Update zone info                        |
 | DELETE | /zone                  | Delete zone                             |
+
+---
+
+### 4.3.1. **Create zone**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zone`
+
+### Example of request:
+
+```
+POST /zone
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+{
+  "name": "Camarote",
+  "price": 420.0,
+  "total_tickets": 850,
+  "eventId": "165gt191-41frg51-156-f41wsd56"
+}
+```
+
+### Example of response:
+
+```
+201 Created
+```
+
+```json
+{
+  "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+  "name": "Camarote",
+  "price": 420.0,
+  "total_tickets": 850,
+  "eventId": "165gt191-41frg51-156-f41wsd56"
+}
+```
+
+### Possible errors:
+
+| Error code      | Description                       |
+| --------------- | --------------------------------- |
+| 400 bad request | Name alrealdy used for that event |
+
+---
+
+### 4.3.2. **List all zones**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zone`
+
+### Example of request:
+
+```
+GET /zone
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+    "name": "Camarote",
+    "price": 420.0,
+    "total_tickets": 850,
+    "eventId": "165gt191-41frg51-156-f41wsd56"
+  },
+
+  {
+    "id": "8mhtd28c4-e540-2w9r-ipa7-j86346d10986",
+    "name": "Pista",
+    "price": 90.0,
+    "total_tickets": 6800,
+    "eventId": "165gt191-41frg51-156-f41wsd56"
+  }
+]
+```
+
+### Possible errors:
+
+None, the maximum that can return an empty list.
+
+---
+
+### 4.3.3. **List zone by id**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zone/<zone_id>`
+
+### Example of request:
+
+```
+GET /zone/<zone_id>
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request parameters:
+
+| Parameter | Type   | Description              |
+| --------- | ------ | ------------------------ |
+| zoneId    | string | Zone's unique identifier |
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+{
+  "id": "8mhtd28c4-e540-2w9r-ipa7-j86346d10986",
+  "name": "Pista",
+  "price": 90.0,
+  "total_tickets": 6800,
+  "eventId": "165gt191-41frg51-156-f41wsd56"
+}
+```
+
+### Possible errors:
+
+| Error code | Description    |
+| ---------- | -------------- |
+| 404        | Zone not found |
+
+---
+
+### 4.3.4. **List all zones by event**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zone/event/<event_id>`
+
+### Example of request:
+
+```
+GET /zone/event/<event_id>
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request parameters:
+
+| Parameter | Type   | Description               |
+| --------- | ------ | ------------------------- |
+| eventId   | string | Event's unique identifier |
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+    "name": "Camarote",
+    "price": 420.0,
+    "total_tickets": 850,
+    "eventId": "165gt191-41frg51-156-f41wsd56"
+  },
+
+  {
+    "id": "8mhtd28c4-e540-2w9r-ipa7-j86346d10986",
+    "name": "Pista",
+    "price": 90.0,
+    "total_tickets": 6800,
+    "eventId": "165gt191-41frg51-156-f41wsd56"
+  }
+]
+```
+
+### Possible errors:
+
+| Error code | Description     |
+| ---------- | --------------- |
+| 404        | Event not found |
 
 ---
 
