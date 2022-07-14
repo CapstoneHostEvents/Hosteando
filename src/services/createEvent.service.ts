@@ -1,5 +1,5 @@
 import { IEventRequest } from "../interfaces/events"
-import { Event } from "../entities/event.entity"
+import { Event } from "../entities/Event"
 import { AppDataSource } from "../data-source"
 import AppError from "../errors/app-error"
 
