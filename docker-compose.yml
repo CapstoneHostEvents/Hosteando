@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   api:
@@ -10,16 +10,16 @@ services:
       - DB_HOST=db
       - DB_PASSWORD=1234
       - DB=hosteando
-      - DB_USER=Hosteando
+      - DB_USER=userhosteando
       - SECRET_KEY=aleatorio
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - .:/app
-  
+
   db:
-    container_name: db
+    container_name: db_hosteando
     image: postgres:14
     ports:
       - 5432:5432
@@ -27,3 +27,15 @@ services:
       - POSTGRES_USER=userhosteando
       - POSTGRES_PASSWORD=1234
       - POSTGRES_DB=hosteando
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U userhosteando -d hosteando"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    volumes:
+      - postgres_hosteando:/var/lib/postgresql/data
+
+volumes:
+  postgres_hosteando:
+    driver: local
