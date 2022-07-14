@@ -8,12 +8,12 @@ export const CreateEventService = async ({name, description, date } : IEventRequ
 
   const findEvent = await eventRepository.findOne({
     where: {
-      name: name
+      name
     }
   })
 
   if (findEvent) {
-    throw new AppError("This event already exists")
+    throw new AppError("This event already exists", 400)
   }
    
   const event = await eventRepository.create({
