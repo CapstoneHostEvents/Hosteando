@@ -7,6 +7,7 @@ export const handleEventError: SchemaOf<IEventRequest> = yup.object().shape({
   name: yup.string().required(),
   description: yup.string().required(),
   date: yup.date().required(),
+  user: yup.string()
 });
 
 export const validateEventCreate =
