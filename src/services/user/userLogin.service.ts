@@ -31,7 +31,7 @@ const userLoginService = async ({
 
   const token = jwt.sign(
     {
-      id: user.id, //preciso insirir dentro do token tanto o id do user quanto o status de isAdm para validação no middlware
+      id: user.id, //preciso inserir dentro do token tanto o id do user quanto o status de isAdm para validação no middlware
       adm: user.isAdm,
     },
     process.env.SECRET_KEY as string,//preciso desse alias pq caso contrário gera error.

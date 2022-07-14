@@ -9,7 +9,7 @@ const userController = new UserController();
 userRouter.post("", validateUserCreate(handleUserError), userController.store);
 userRouter.get("", authMiddleware, isAdmUserMiddleware, userController.index);
 userRouter.get("/:id", userController.show);
-userRouter.patch("/:id", userController.update);
+userRouter.patch("/:id", validateUserCreate(handleUserError), userController.update);
 userRouter.delete("/:id", userController.delete);
 
 export default userRouter;

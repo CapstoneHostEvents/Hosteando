@@ -31,7 +31,17 @@ const userCreateService = async ({
     password: hashedPassword,
   });
   await userRepository.save(user);
-  return user;
+
+const newUser = {
+  id: user.id,
+  isAdm:user.isAdm,
+  name: user.name,
+  email: user.email,
+  created_at: user.created_at,
+  updated_at: user.updated_at,
+};
+
+  return newUser;
 };
 
 export default userCreateService;
