@@ -6,7 +6,9 @@ export interface IEventRequest {
 }
 
 export interface IEventResponse {
+  id: string
   name: string
   description: string
-  date: Date
+  date: Date,
+  created_at: Date
 }
