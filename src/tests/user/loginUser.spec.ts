@@ -4,7 +4,7 @@ import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
 import app from "../../app";
 import request from "supertest";
 
-describe("Testing GET /users", () => {
+describe("Testing POST /login", () => {
   let connection: DataSource
 
   interface User {
@@ -47,26 +47,22 @@ describe("Testing GET /users", () => {
     await connection.destroy();
   });
 
-  test("Should be able to list all users", async () => {
-      const responseToken = await request(app).post("/login").send(loginUser);
-      const {token} = responseToken.body
-      const response = await request(app).get("/users").set("Authorization", `Bearer ${token}`);
+  test("Testing POST /login route", async () => {
+    const response = await request(app).post("/login").send(loginUser);
 
-      delete testUser.password //password deletada porque a requisição dos usuarios não contem password 
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("token");
+    expect(typeof response.body.token).toBe("string");
+  });
 
-    expect(response.status).toEqual(200);
-    expect(response.body.length).toEqual(1);
-    expect(Array.isArray(response.body)).toBe(true);
-     expect(response.body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-            ...testUser,
-            id: response.body[0].id,
-            created_at: response.body[0].created_at,
-            updated_at: response.body[0].updated_at,
-          }),
-      ])
-    );
+  test ("Testing invalid login", async () => {
+    loginUser.password = "123";
+    const response = await request(app).post("/login").send(loginUser);
+    
+
+    expect(response.status).toBe(403);
+    expect(response.body).toHaveProperty("message", "Wrong email/password");
+    loginUser.password = "123456";
   });
 
 });
