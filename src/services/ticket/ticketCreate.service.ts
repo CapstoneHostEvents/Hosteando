@@ -21,7 +21,13 @@ const ticketCreateService = async ({ userId, zoneId } : ITicketRequest) =>{
     throw new AppError("Zone not found", 400);
   }
 
-  const tickets = await ticketRepository.find({ where: { zone } });
+  const tickets = await ticketRepository
+    .createQueryBuilder()
+    .select('t.created_at')
+    .from(Ticket, 't')
+    .where("t.zoneId = :zone_id",{zone_id:zoneId})
+    .getMany();
+
   if (tickets.length > zone.total_tickets){
     throw new AppError("All tickets from this zone were already created", 409);
   }
