@@ -13,13 +13,10 @@ exports.AppDataSource = process.env.NODE_ENV === "test"
     }) :
     new typeorm_1.DataSource({
         type: "postgres",
-        host: process.env.DB_HOST,
-        port: 5432,
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB,
+        url: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
         synchronize: false,
         // logging: true,
-        entities: ["src/entities/*.ts"],
-        migrations: ["src/migrations/*.ts"],
+        entities: process.env.NODE_ENV === "production" ? ["dist/entities/*.js"] : ["src/entities/*.ts"],
+        migrations: process.env.NODE_ENV === "production" ? ["dist/migrations/*.js"] : ["src/migrations/*.ts"],
     });
