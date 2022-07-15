@@ -32,15 +32,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateEventCreate = exports.handleEventError = void 0;
+exports.validateUserCreate = exports.handleUserError = void 0;
 const yup = __importStar(require("yup"));
-exports.handleEventError = yup.object().shape({
+exports.handleUserError = yup.object().shape({
     name: yup.string().required(),
-    description: yup.string().required(),
-    date: yup.date().required(),
-    user: yup.string()
+    email: yup.string().email().required(),
+    password: yup.string().required(),
+    isAdm: yup.boolean().required()
 });
-const validateEventCreate = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const validateUserCreate = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
         const data = req.body;
@@ -49,7 +49,7 @@ const validateEventCreate = (schema) => (req, res, next) => __awaiter(void 0, vo
                 abortEarly: false,
                 stripUnknown: true,
             });
-            req.newEvent = validatedData;
+            req.newUser = validatedData;
             next();
         }
         catch (err) {
@@ -63,4 +63,4 @@ const validateEventCreate = (schema) => (req, res, next) => __awaiter(void 0, vo
         next(err);
     }
 });
-exports.validateEventCreate = validateEventCreate;
+exports.validateUserCreate = validateUserCreate;
