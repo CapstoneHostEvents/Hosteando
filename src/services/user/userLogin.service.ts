@@ -26,7 +26,7 @@ const userLoginService = async ({
   const comparePassword = await compare(password, user.password);
 
   if (!comparePassword) {
-    throw new AppError("Email or password incorrect", 403);
+    throw new AppError("Wrong email/password", 403);
   }
 
   const token = jwt.sign(
