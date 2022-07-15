@@ -1,15 +1,16 @@
 import { DataSource, InitializedRelationError } from "typeorm";
 import { AppDataSource } from "../../data-source";
 import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
-import { ITicket, ITicketRequest } from "../../interfaces/ticket";
-import { IUser, IUserLogin, IUserRequest } from "../../interfaces/user";
-import userCreateService from "../../services/user/userCreate.service";
-// import userLoginService from "../../services/user/userLogin.service";
-import { IEventRequest, IEventResponse } from "../../interfaces/events";
-import { CreateEventService } from "../../services/event/createEvent.service";
+
+import {  ITicketRequest } from "../../interfaces/ticket";
+import { IUser, IUserRequest } from "../../interfaces/user";
 import { IZoneCreate } from "../../interfaces/zones";
+import { IEventRequest, IEventResponse } from "../../interfaces/events";
+
+import userCreateService from "../../services/user/userCreate.service";
+import { CreateEventService } from "../../services/event/createEvent.service";
 import CreateZoneService from "../../services/Zones/CreateZone.services";
-import ticketCreateService from "../../services/ticket/ticketCreate.service";
+
 import  request from "supertest";
 import app from "../../app";
 
