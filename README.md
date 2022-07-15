@@ -83,20 +83,20 @@ yarn typeorm migration:run -d src/data-source.ts
 - [User](#41-user)
   - [POST - /users](#411-create-user)
   - [GET - /users](#412-list-all-users)
-  - [GET - /users/<userId>](#413-list-user-by-id)
-  - [PATCH - /users/<userId>](#414-update-user-data)
+  - [GET - /users/<user_id>](#413-list-user-by-id)
+  - [PATCH - /users/<user_id>](#414-update-user-data)
   - [DELETE - /users](#415-delete-user)
   - [POST - /login](#416-login)
 - [Event](#42-event)
   - [POST - /event](#421-create-event)
   - [GET - /event](#422-list-all-events)
-  - [PATCH - /event/<eventId>](#423-update-event)
-  - [DELETE - /event/<eventId>](#424-delete-event)
+  - [PATCH - /event/<event_id>](#423-update-event)
+  - [DELETE - /event/<event_id>](#424-delete-event)
 - [Zone](#43-zone)
   - [POST - /zones](#431-create-zone)
   - [GET - /zones](#432-list-all-zones)
-  - [GET - /zones/<zoneId>](#433-list-zone-by-id)
-  - [GET - /zones/event/<eventId>](#434-list-all-zones-by-event)
+  - [GET - /zones/<zone_id>](#433-list-zone-by-id)
+  - [GET - /zones/event/<event_id>](#434-list-all-zones-by-event)
   - [PATCH - /zone](#435-update-zone)
   - [DELETE - /zone](#436-delete-zone)
 - [Ticket](#44-ticket)
@@ -581,8 +581,8 @@ The Zone object is defined as:
 | ------ | --------------------- | --------------------------------------- |
 | POST   | /zone                 | Create zone                             |
 | GET    | /zone                 | List all zones                          |
-| GET    | /zone/<zoneId>        | List the zone with the corresponding id |
-| GET    | /zone/event/<eventId> | List all zones from of an event         |
+| GET    | /zone/<zone_id>        | List the zone with the corresponding id |
+| GET    | /zone/event/<event_id> | List all zones from of an event         |
 | PATCH  | /zone                 | Update zone info                        |
 | DELETE | /zone                 | Delete zone                             |
 
@@ -846,24 +846,21 @@ Empty
 
 The Ticket object is defined as:
 
-| Field         | Type   | Description                       |
-| ------------- | ------ | --------------------------------- |
-| id            | string | Zone's unique identifier          |
-| name          | string | Username                          |
-| price         | number | Ticket value in the zone          |
-| total_tickets | number | Total number of tickets available |
-| eventId       | string | Relationship with event id        |
+| Field      | Type   | Description                |
+| ---------- | ------ | -------------------------- |
+| id         | string | Ticket's unique identifier |
+| zoneId     | string | Relationship with zone id  |
+| userId     | number | Relationship with user id  |
+| created_at | number | Event creation date        |
 
 ## Endpoints
 
-| Method | Endpoint              | Responsability                          |
-| ------ | --------------------- | --------------------------------------- |
-| POST   | /zone                 | Create zone                             |
-| GET    | /zone                 | List all zones                          |
-| GET    | /zone/<zoneId>        | List the zone with the corresponding id |
-| GET    | /zone/event/<eventId> | List all zones from of an event         |
-| PATCH  | /zone                 | Update zone info                        |
-| DELETE | /zone                 | Delete zone                             |
+| Method | Endpoint | Responsability            |
+| ------ | -------- | ------------------------- |
+| POST   | /tickets  | Buy an ticket             |
+| GET    | /tickets  | List all tickets          |
+| GET    | /tickets  | List all the user tickets |
+| DELETE | /tickets  | Delete ticket             |
 
 ---
 
@@ -871,20 +868,24 @@ The Ticket object is defined as:
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/ticket`
+### `/tickets`
 
 ### Example of request:
 
 ```
-POST /ticket
+POST /tickets
 Host: https://hosteando.herokuapp.com
+Authorization
 Content-type: application/json
 ```
 
 ### Request body:
 
 ```json
-{}
+{
+  "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+  "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c"
+}
 ```
 
 ### Example of response:
@@ -894,7 +895,12 @@ Content-type: application/json
 ```
 
 ```json
-{}
+{
+  "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
+  "created_at": "2022-07-15T14:06:45.088Z",
+  "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+  "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c"
+}
 ```
 
 ### Possible errors:
@@ -909,13 +915,14 @@ Content-type: application/json
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/ticket`
+### `/tickets`
 
 ### Example of request:
 
 ```
-GET /ticket
+GET /tickets
 Host: https://hosteando.herokuapp.com
+Authorization
 Content-type: application/json
 ```
 
@@ -932,7 +939,12 @@ Empty
 ```
 
 ```json
-[{}]
+[
+  {
+    "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
+    "created_at": "2022-07-15T14:06:45.088Z"
+  }
+]
 ```
 
 ### Possible errors:
