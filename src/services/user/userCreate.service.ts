@@ -11,7 +11,6 @@ const userCreateService = async ({
   password,
 }: IUserRequest): Promise<IUser> => {
 
-  console.log(password)
 
   const userRepository = AppDataSource.getRepository(User);
 
