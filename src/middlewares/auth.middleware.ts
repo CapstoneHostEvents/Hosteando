@@ -8,7 +8,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization
 
     if(!token){
-        throw new AppError("Invalid token", 401);  
+        throw new AppError("No token found", 404);  
     }
 
     const splitToken = token.split(" ")
