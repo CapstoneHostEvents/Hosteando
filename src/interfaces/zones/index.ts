@@ -5,18 +5,10 @@ export interface IZoneRequest {
   eventId: string;
 }
 
-/*export interface IUserRequest {
+export interface IZoneCreate {
   name: string;
-  email: string;
-  password: string;
-  age: number;
+  price: number;
+  total_tickets: number;
+  eventId: string;
+  userId: string;
 }
-
-export interface IUser extends IUserRequest {
-  id: string;
-  created_at: Date;
-  updated_at: Date;
-}
-
-export type IUserReturnNoPasword = Omit<IUser, "password">;
-*/

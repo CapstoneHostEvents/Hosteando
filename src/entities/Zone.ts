@@ -30,7 +30,7 @@ export class Zone {
   @ManyToOne(() => Event, (event) => event.zones, { eager: true })
   event: Event;
 
-  @OneToMany(() => Ticket, (ticket) => ticket.zone)
+  @OneToMany(() => Ticket, (ticket) => ticket.zone, { eager: true })
   ticket: Ticket[];
 
   @CreateDateColumn()

@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
+import { IEmailRequest } from "../../interfaces/user";
 import userCreateService from "../../services/user/userCreate.service";
 import userDeleteService from "../../services/user/userDelete.service";
 import userListService from "../../services/user/userList.service";
 import userListIndexService from "../../services/user/userListIndex.service";
 import userLoginService from "../../services/user/userLogin.service";
+import userSendEmailService from "../../services/user/userSendEmail.service";
 import userUpdateService from "../../services/user/userUpdate.service";
 
 export default class UserController {
@@ -52,10 +54,15 @@ export default class UserController {
     return res.status(200).json({ message: "User deleted!" });
   }
   //Login
-  async login(req: Request, res: Response){
-    const { email, password } = req.body;
+  async login(req: Request, res: Response) {
+    const { email, password } = req.newLogin;
     const token = await userLoginService({ email, password });
-
     return res.status(201).json({ token });
+  }
+  //Email
+  async sendemail(req: Request, res: Response) {
+    const { subject, to, text }: IEmailRequest = req.body;
+    const emailuser = await userSendEmailService({ subject, to, text });
+    return res.status(200).json({ message: "Email succeed" });
   }
 }
