@@ -1,17 +1,15 @@
 import { Request, Response } from "express";
 import CreateZoneService from "../../services/Zones/CreateZone.services";
 import ListZoneService from "../../services/Zones/ListZone.services";
-import RetrieveEventZoneService from "../../services/Zones/RetrieveEventZone.services";
 import RetrieveZoneService from "../../services/Zones/RetrieveZone.services";
 
 export default class ZoneController {
+  //Criando Zone
   async store(req: Request, res: Response) {
     const { name, price, total_tickets, eventId } = req.body;
     const userId = req.user.id;
 
-    const createZoneService = new CreateZoneService();
-
-    const zone = await createZoneService.execute({
+    const zone = await CreateZoneService({
       name,
       price,
       total_tickets,
@@ -22,29 +20,19 @@ export default class ZoneController {
     return res.status(201).json(zone);
   }
 
-  async show(req: Request, res: Response) {
-    const listZoneService = new ListZoneService();
-
-    const zones = await listZoneService.execute();
+  //Listando todos as Zones
+  async index(req: Request, res: Response) {
+    const zones = await ListZoneService();
 
     return res.status(200).json(zones);
   }
 
-  async index(req: Request, res: Response) {
-    const retrieveZoneService = new RetrieveZoneService();
+  //Listar Zone por Id
+  async show(req: Request, res: Response) {
     const zoneId = req.params.zoneId;
 
-    const zone = await retrieveZoneService.execute(zoneId);
+    const zone = await RetrieveZoneService(zoneId);
 
     return res.status(200).json(zone);
-  }
-
-  async indexEvent(req: Request, res: Response) {
-    const retrieveEventZoneService = new RetrieveEventZoneService();
-    const eventId = req.params.eventId;
-
-    const zones = await retrieveEventZoneService.execute(eventId);
-
-    return res.status(200).json(zones);
   }
 }
