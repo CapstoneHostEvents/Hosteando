@@ -8,5 +8,6 @@ export const EventRoutes = Router()
 
 EventRoutes.post("/", authMiddleware, isAdmUserMiddleware, validateEventCreate(handleEventError), CreateEventController.create)
 EventRoutes.get("/", CreateEventController.read)
+EventRoutes.get("/:id", authMiddleware, isAdmUserMiddleware, CreateEventController.readOneEvent)
 EventRoutes.patch("/:id", authMiddleware, isAdmUserMiddleware, CreateEventController.update)
 EventRoutes.delete("/:id", authMiddleware, isAdmUserMiddleware, CreateEventController.delete)

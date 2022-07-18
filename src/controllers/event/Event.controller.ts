@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
-import { CreateEventService } from "../../services/event/createEvent.service";
+import { Request, Response } from "express"
+import { string } from "yup"
+import { CreateEventService } from "../../services/event/createEvent.service"
 import { DeleteEventService } from "../../services/event/deleteEvent.service"
 import { ListEventService } from "../../services/event/listEvents.service"
+import { ListOneEventService } from "../../services/event/listOneEvent.service"
 import { UpdateEventService } from "../../services/event/updateEvent.service"
 
 export class CreateEventController {
@@ -23,6 +25,13 @@ export class CreateEventController {
     const events = await ListEventService();
 
     return res.status(200).json(events);
+  }
+
+  static async readOneEvent(req: Request, res: Response) {
+    const id = req.params.id
+    const event = await ListOneEventService(id)
+
+    return res.status(200).json(event);
   }
 
   static async update (req: Request, res: Response) {

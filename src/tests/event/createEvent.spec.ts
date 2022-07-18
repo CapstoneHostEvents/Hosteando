@@ -50,7 +50,7 @@ let tokenAdm = ""
 let tokenAdm2 = ""
 let tokenNoAdm = ""
 
-let userId = ""
+let eventId = ""
 
 describe("Create a Event", () => {
   let connection: DataSource
@@ -81,8 +81,8 @@ describe("Create a Event", () => {
   const loginNoAdmResponse = await request(app)
     .post("/login")
     .send(loginNoAdm)
-  tokenNoAdm = loginNoAdmResponse.body.token
-})
+    tokenNoAdm = loginNoAdmResponse.body.token
+  })
 
   afterAll(async () => {
     await connection.destroy()
@@ -93,7 +93,7 @@ describe("Create a Event", () => {
       .post("/event")
       .send(eventCorrect)
       .set("Authorization", `Bearer ${tokenAdm}`)
-      userId = response.body.id
+      eventId = response.body.id
 
     expect(response.status).toBe(201)
     expect(response.body).toHaveProperty("name")
@@ -135,6 +135,62 @@ describe("Create a Event", () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("map")
+  })
+
+  it("Trying to update an event", async () => {
+    const response = await request(app)
+      .patch(`/events/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`)
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("map")
+  })
+
+  it("Trying to update an event with different user from event creator", async () => {
+    const response = await request(app)
+      .patch(`/events/${eventId}`)
+      .send(eventCorrect)
+      .set("Authorization", `Bearer ${tokenAdm2}`)
+
+    expect(response.status).toBe(403);
+    expect(response.body).toHaveProperty("message", "No permission allowed")
+  })
+
+  it("Trying to update an event that doesn't exist", async () => {
+    const response = await request(app)
+      .patch(`/events/${eventId}`)
+      .send(eventCorrect)
+      .set("Authorization", `Bearer ${tokenAdm2}`)
+
+    expect(response.status).toBe(403);
+    expect(response.body).toHaveProperty("message", "No permission allowed")
+  })
+
+  it("Trying to delete an event", async () => {
+    const response = await request(app)
+      .delete(`/events/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`)
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("map")
+  })
+
+  it("Trying to delete an event with different user from event creator", async () => {
+    const response = await request(app)
+      .delete(`/events/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm2}`)
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("message", "No permission allowed")
+  })
+
+  it("Trying to delete an event that doesn't exist", async () => {
+    const response = await request(app)
+      .delete(`/events/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm2}`)
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "No permission allowed")
   })
 })
 
