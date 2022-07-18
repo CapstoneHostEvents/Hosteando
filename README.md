@@ -97,8 +97,8 @@ yarn typeorm migration:run -d src/data-source.ts
   - [GET - /zones](#432-list-all-zones)
   - [GET - /zones/<zone_id>](#433-list-zone-by-id)
   - [GET - /zones/event/<event_id>](#434-list-all-zones-by-event)
-  - [PATCH - /zone](#435-update-zone)
-  - [DELETE - /zone](#436-delete-zone)
+  - [PATCH - /zones](#435-update-zone)
+  - [DELETE - /zones](#436-delete-zone)
 - [Ticket](#44-ticket)
   - [POST - /ticket](#441-buy-ticket)
   - [GET - /ticket](#442-list-all-tickets)
@@ -158,6 +158,17 @@ Content-type: application/json
   "email": "ana@mail.com",
   "password": "1234",
   "isAdm": true
+}
+```
+
+### Validation Schema with Yup
+
+```
+{
+  name: yup.string().required(),
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+  isAdm: yup.boolean().required()
 }
 ```
 
@@ -239,7 +250,9 @@ Empty
 
 ### Possible errors:
 
-None, the maximum that can return an empty list.
+| Error code    | Description    |
+| ------------- | -------------- |
+| 404 Not found | No token found |
 
 ---
 
@@ -289,9 +302,9 @@ Empty
 
 ### Possible errors:
 
-| Error code | Description    |
-| ---------- | -------------- |
-| 404        | User not found |
+| Error code    | Description    |
+| ------------- | -------------- |
+| 404 Not found | User not found |
 
 ---
 
@@ -414,6 +427,15 @@ Content-type: application/json
 }
 ```
 
+### Validation Schema with Yup
+
+```
+{
+  email: yup.string().required(),
+ password: yup.string().required(),
+}
+```
+
 ### Example of response:
 
 ```
@@ -481,7 +503,18 @@ Content-type: application/json
 {
   "name": "Rock in Rio",
   "description": "Festival de música e entretenimento",
-  "date": "2025-07-07 17:01:18.410677""
+  "date": "2025-07-07 17:01:18.410677"
+}
+```
+
+### Validation Schema with Yup
+
+```
+{
+  name: yup.string().required(),
+  description: yup.string().required(),
+  date: yup.date().required(),
+  user: yup.string()
 }
 ```
 
@@ -577,14 +610,14 @@ The Zone object is defined as:
 
 ## Endpoints
 
-| Method | Endpoint              | Responsability                          |
-| ------ | --------------------- | --------------------------------------- |
-| POST   | /zone                 | Create zone                             |
-| GET    | /zone                 | List all zones                          |
+| Method | Endpoint               | Responsability                          |
+| ------ | ---------------------- | --------------------------------------- |
+| POST   | /zone                  | Create zone                             |
+| GET    | /zone                  | List all zones                          |
 | GET    | /zone/<zone_id>        | List the zone with the corresponding id |
 | GET    | /zone/event/<event_id> | List all zones from of an event         |
-| PATCH  | /zone                 | Update zone info                        |
-| DELETE | /zone                 | Delete zone                             |
+| PATCH  | /zone                  | Update zone info                        |
+| DELETE | /zone                  | Delete zone                             |
 
 ---
 
@@ -611,6 +644,18 @@ Content-type: application/json
   "price": 420.0,
   "total_tickets": 850,
   "eventId": "c1e4d222-3e5d-45de-94b5-1656112d9046"
+}
+```
+
+### Validation Schema with Yup
+
+```
+{
+  name: yup.string().required(),
+  price: yup.number().required(),
+  total_tickets: yup.number().required(),
+  eventId: yup.string().required(),
+  userId: yup.string(),
 }
 ```
 
@@ -857,10 +902,10 @@ The Ticket object is defined as:
 
 | Method | Endpoint | Responsability            |
 | ------ | -------- | ------------------------- |
-| POST   | /tickets  | Buy an ticket             |
-| GET    | /tickets  | List all tickets          |
-| GET    | /tickets  | List all the user tickets |
-| DELETE | /tickets  | Delete ticket             |
+| POST   | /tickets | Buy an ticket             |
+| GET    | /tickets | List all tickets          |
+| GET    | /tickets | List all the user tickets |
+| DELETE | /tickets | Delete ticket             |
 
 ---
 
@@ -875,7 +920,6 @@ The Ticket object is defined as:
 ```
 POST /tickets
 Host: https://hosteando.herokuapp.com
-Authorization
 Content-type: application/json
 ```
 
