@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUserRequest } from "../interfaces/user";
+import { IUserRequest } from "../interfaces/users";
 import * as yup from "yup";
 import { SchemaOf } from "yup";
 
@@ -7,7 +7,7 @@ export const handleUserError: SchemaOf<IUserRequest> = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().required(),
-  isAdm: yup.boolean().required()
+  isAdm: yup.boolean().required(),
 });
 
 export const validateUserCreate =

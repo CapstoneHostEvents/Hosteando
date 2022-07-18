@@ -93,7 +93,7 @@ describe("Testes rota /zones", () => {
     tokenNoAdm = loginNoAdmResponse.body.token;
 
     const createEvent = await request(app)
-      .post("/event")
+      .post("/events")
       .send(eventCorrect)
       .set("Authorization", `Bearer ${tokenAdm}`);
     zoneCorret.eventId = createEvent.body.id;

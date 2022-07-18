@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import CreateZoneService from "../../services/Zones/CreateZone.services";
-import ListZoneService from "../../services/Zones/ListZone.services";
-import RetrieveEventZoneService from "../../services/Zones/RetrieveEventZone.services";
-import RetrieveZoneService from "../../services/Zones/RetrieveZone.services";
+import CreateZoneService from "../../services/zones/CreateZone.services";
+import ListZoneService from "../../services/zones/ListZone.services";
+import RetrieveEventZoneService from "../../services/zones/RetrieveEventZone.services";
+import RetrieveZoneService from "../../services/zones/RetrieveZone.services";
 
 export default class ZoneController {
   async store(req: Request, res: Response) {

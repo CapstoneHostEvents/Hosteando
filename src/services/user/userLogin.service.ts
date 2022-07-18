@@ -2,7 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/User";
 import jwt from "jsonwebtoken";
 import { compare } from "bcryptjs";
-import { IUserLogin } from "../../interfaces/user";
+import { IUserLogin } from "../../interfaces/users";
 import AppError from "../../errors/app-error";
 import "dotenv/config";
 
@@ -34,7 +34,7 @@ const userLoginService = async ({
       id: user.id, //preciso inserir dentro do token tanto o id do user quanto o status de isAdm para validação no middlware
       adm: user.isAdm,
     },
-    process.env.SECRET_KEY as string,//preciso desse alias pq caso contrário gera error.
+    process.env.SECRET_KEY as string, //preciso desse alias pq caso contrário gera error.
     {
       expiresIn: "24h",
     }

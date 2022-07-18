@@ -1,5 +1,5 @@
 import Router from "express";
-import ZoneController from "../../controllers/Zones/zone.controller";
+import ZoneController from "../../controllers/zones/zone.controller";
 import authMiddleware from "../../middlewares/auth.middleware";
 import isAdmUserMiddleware from "../../middlewares/isAdmUser.middleware";
 import validateZoneCreate, {
@@ -19,6 +19,5 @@ zoneRoutes.post(
 );
 zoneRoutes.get("", authMiddleware, zoneController.show);
 zoneRoutes.get("/:zoneId", authMiddleware, zoneController.index);
-zoneRoutes.get("/event/:eventId", authMiddleware, zoneController.indexEvent);
 
 export default zoneRoutes;
