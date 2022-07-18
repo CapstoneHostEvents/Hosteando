@@ -42,7 +42,7 @@ const loginNoAdm = {
 };
 
 const eventCorrect = {
-  name: "Event1",
+  name: "Event1caio",
   description: "new event",
   date: "2025-07-07 17:01:18.410677",
 };
@@ -52,6 +52,12 @@ const zoneCorret = {
   price: 3000,
   total_tickets: 200,
   eventId: "",
+};
+
+const zoneUpdate = {
+  name: "novo lounge",
+  price: 300,
+  total_tickets: 50,
 };
 
 let tokenAdm = "";
@@ -165,5 +171,49 @@ describe("Testes rota /zones", () => {
     expect(response.body).toHaveProperty("price");
     expect(response.body).toHaveProperty("created_at");
     expect(response.body).toHaveProperty("event");
+  });
+
+  it("Trying to update a zone", async () => {
+    const response = await request(app)
+      .patch(`/zones/${zoneId}`)
+      .send(zoneUpdate)
+      .set("Authorization", `Bearer ${tokenAdm}`);
+
+    const responseGet = await request(app)
+      .get(`/zones/${zoneId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`);
+
+    expect(response.body).toHaveProperty("message", "Zone updated!");
+    expect(responseGet.body).toHaveProperty("name", zoneUpdate.name);
+    expect(responseGet.body).toHaveProperty("price", zoneUpdate.price);
+    expect(responseGet.body).toHaveProperty(
+      "total_tickets",
+      zoneUpdate.total_tickets
+    );
+  });
+
+  it("Trying to update a zone with eventId", async () => {
+    const response = await request(app)
+      .patch(`/zones/${zoneId}`)
+      .send({ ...zoneUpdate, eventId: "teste" })
+      .set("Authorization", `Bearer ${tokenAdm}`);
+
+    expect(response.body).toHaveProperty(
+      "message",
+      "Cannot change eventId for a zone"
+    );
+  });
+
+  it("Trying to delete a zone", async () => {
+    const response = await request(app)
+      .delete(`/zones/${zoneId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`);
+
+    const responseGet = await request(app)
+      .get(`/zones/${zoneId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`);
+
+    expect(response.body).toHaveProperty("message", "Zone deleted!");
+    expect(responseGet.body).toHaveProperty("status", "error");
   });
 });

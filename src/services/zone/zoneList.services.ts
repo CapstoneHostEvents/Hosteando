@@ -2,7 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { Zone } from "../../entities/Zone";
 import AppError from "../../errors/app-error";
 
-const ListZoneService = async (): Promise<Zone[]> => {
+const listZoneService = async (): Promise<Zone[]> => {
   const zoneRepository = AppDataSource.getRepository(Zone);
 
   const zones = await zoneRepository.find();
@@ -12,4 +12,4 @@ const ListZoneService = async (): Promise<Zone[]> => {
   return zones;
 };
 
-export default ListZoneService;
+export default listZoneService;

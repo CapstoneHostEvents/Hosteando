@@ -4,7 +4,7 @@ import { Zone } from "../../entities/Zone";
 import { Event } from "../../entities/Event";
 import AppError from "../../errors/app-error";
 
-const CreateZoneService = async ({
+const createZoneService = async ({
   name,
   price,
   total_tickets,
@@ -40,4 +40,4 @@ const CreateZoneService = async ({
   return zone;
 };
 
-export default CreateZoneService;
+export default createZoneService;
