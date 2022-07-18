@@ -6,7 +6,5 @@ export const ListEventService = async (): Promise<Event[]> => {
 
   const event = await eventRepository.find()
 
-  console.log(event[2])
-
   return event
 }

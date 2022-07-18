@@ -5,11 +5,11 @@ import { ListEventService } from "../../services/event/listEvents.service"
 export class CreateEventController {
   static async create (req: Request, res: Response) {
     const { name, description, date } = req.newEvent
-    const user = req.user
+    const user = req.user.id
     
     const newEvent = await CreateEventService({name, description, date, user})
 
-    return res.json(newEvent)
+    return res.status(201).json(newEvent)
   }
 
   static async read (req: Request, res: Response) {
