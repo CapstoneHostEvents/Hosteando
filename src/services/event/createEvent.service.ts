@@ -16,6 +16,8 @@ export const CreateEventService = async ({name, description, date, user } : IEve
     id: user.id
   })
 
+  console.log(userData)
+
   if (userData?.id !== user) {
     throw new AppError("No permission allowed", 403)
   }

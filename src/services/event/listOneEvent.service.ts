@@ -14,6 +14,8 @@ export const ListOneEventService = async (id: string) => {
     id: id
   })
 
+  console.log(`Event: ${event}`)
+
   if (!event) throw new AppError("Event not found", 404)
 
   return event

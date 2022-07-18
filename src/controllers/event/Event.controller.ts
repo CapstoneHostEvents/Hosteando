@@ -1,5 +1,4 @@
 import { Request, Response } from "express"
-import { string } from "yup"
 import { CreateEventService } from "../../services/event/createEvent.service"
 import { DeleteEventService } from "../../services/event/deleteEvent.service"
 import { ListEventService } from "../../services/event/listEvents.service"
