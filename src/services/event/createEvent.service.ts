@@ -13,7 +13,7 @@ export const CreateEventService = async ({name, description, date, user } : IEve
   })
   
   const userData = await userRepository.findOneBy({
-    id: user.id
+    id: user
   })
 
   if (userData?.id !== user) {
@@ -28,7 +28,7 @@ export const CreateEventService = async ({name, description, date, user } : IEve
     name, 
     description, 
     date,
-    user: user.id
+    user: user
   })
 
   await eventRepository.save(event)
