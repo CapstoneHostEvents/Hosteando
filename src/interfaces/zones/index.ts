@@ -12,3 +12,7 @@ export interface IZoneCreate {
   eventId: string;
   userId: string;
 }
+
+export interface IZoneUpdate extends IZoneRequest {
+  zoneId: string;
+}

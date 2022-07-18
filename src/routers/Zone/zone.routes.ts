@@ -19,5 +19,17 @@ zoneRoutes.post(
 );
 zoneRoutes.get("", authMiddleware, zoneController.index);
 zoneRoutes.get("/:zoneId", authMiddleware, zoneController.show);
+zoneRoutes.patch(
+  "/:zoneId",
+  authMiddleware,
+  isAdmUserMiddleware,
+  zoneController.update
+);
+zoneRoutes.delete(
+  "/:zoneId",
+  authMiddleware,
+  isAdmUserMiddleware,
+  zoneController.delete
+);
 
 export default zoneRoutes;

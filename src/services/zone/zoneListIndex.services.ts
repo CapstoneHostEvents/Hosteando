@@ -2,7 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { Zone } from "../../entities/Zone";
 import AppError from "../../errors/app-error";
 
-const RetrieveZoneService = async (zoneId: string): Promise<Zone> => {
+const retrieveZoneService = async (zoneId: string): Promise<Zone> => {
   const zoneRepository = AppDataSource.getRepository(Zone);
 
   const zone = await zoneRepository.findOneBy({
@@ -14,4 +14,4 @@ const RetrieveZoneService = async (zoneId: string): Promise<Zone> => {
   return zone;
 };
 
-export default RetrieveZoneService;
+export default retrieveZoneService;

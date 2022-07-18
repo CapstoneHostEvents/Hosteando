@@ -88,6 +88,8 @@ describe("Create a Event", () => {
     await connection.destroy()
   })
 
+  // 1 - CREATE EVENT
+
   it("Trying to create an event with correct body", async () => {
     const response = await request(app)
       .post("/event")
@@ -119,14 +121,16 @@ describe("Create a Event", () => {
 
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("message", "User is not admin")
-  });
+  })
 
   it("Trying to create an event with correct body with no token", async () => {
     const response = await request(app).post("/event").send(eventCorrect)
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "No token found")
-  });
+  })
+
+  // 2 - LIST EVENTS
 
   it("Trying to list all events", async () => {
     const response = await request(app)
@@ -136,6 +140,24 @@ describe("Create a Event", () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("map")
   })
+
+  // 3 - LIST ONE EVENT
+
+  it("Trying to list an event", async () => {
+    const response = await request(app)
+      .get(`/event/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty("id")
+    expect(response.body).toHaveProperty("name")
+    expect(response.body).toHaveProperty("description")
+    expect(response.body).toHaveProperty("date")
+    expect(response.body).toHaveProperty("created_at")
+    expect(response.body).toHaveProperty("user")
+  })
+
+  // 4 - UPDATE AN EVENT
 
   it("Trying to update an event", async () => {
     const response = await request(app)
@@ -165,6 +187,8 @@ describe("Create a Event", () => {
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("message", "No permission allowed")
   })
+
+  // 5 - DELETE AN EVENT
 
   it("Trying to delete an event", async () => {
     const response = await request(app)
