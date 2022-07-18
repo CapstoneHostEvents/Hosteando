@@ -2,16 +2,19 @@ import { AppDataSource } from "../../data-source";
 import { Event } from "../../entities/Event";
 import AppError from "../../errors/app-error";
 
-export default class ListOneEventService {
-  async execute(id: string) {
-    const eventRepository = AppDataSource.getRepository(Event)
+export const ListOneEventService = async (id: string) => {
 
-    const event = await eventRepository.findOneBy({
-      id: id
-    });
-
-    if (!event) throw new AppError("Zone not found", 404)
-
-    return event
+  if (id.length !== 36) {
+    throw new AppError("Wrong event id", 404)
   }
+
+  const eventRepository = AppDataSource.getRepository(Event)
+
+  const event = await eventRepository.findOneBy({
+    id: id
+  })
+
+  if (!event) throw new AppError("Event not found", 404)
+
+  return event
 }
