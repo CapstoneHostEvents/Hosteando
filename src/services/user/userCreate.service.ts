@@ -11,7 +11,6 @@ const userCreateService = async ({
   password,
 }: IUserRequest): Promise<IUser> => {
 
-
   const userRepository = AppDataSource.getRepository(User);
 
   const checkUserExists = await userRepository.findOne({

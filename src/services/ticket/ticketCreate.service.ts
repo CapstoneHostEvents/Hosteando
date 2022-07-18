@@ -28,7 +28,7 @@ const ticketCreateService = async ({ userId, zoneId } : ITicketRequest) =>{
     .where("t.zoneId = :zone_id",{zone_id:zoneId})
     .getMany();
 
-  if (tickets.length > zone.total_tickets){
+  if (tickets.length +1 > zone.total_tickets){
     throw new AppError("All tickets from this zone were already created", 409);
   }
 

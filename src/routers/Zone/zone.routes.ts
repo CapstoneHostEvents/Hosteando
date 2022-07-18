@@ -17,8 +17,7 @@ zoneRoutes.post(
   validateZoneCreate(handleZoneError),
   zoneController.store
 );
-zoneRoutes.get("", authMiddleware, zoneController.show);
-zoneRoutes.get("/:zoneId", authMiddleware, zoneController.index);
-zoneRoutes.get("/event/:eventId", authMiddleware, zoneController.indexEvent);
+zoneRoutes.get("", authMiddleware, zoneController.index);
+zoneRoutes.get("/:zoneId", authMiddleware, zoneController.show);
 
 export default zoneRoutes;

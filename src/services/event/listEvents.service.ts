@@ -6,5 +6,6 @@ export const ListEventService = async (): Promise<Event[]> => {
 
   const event = await eventRepository.find();
 
-  return event;
-};
+  return event
+}
+
