@@ -22,7 +22,7 @@ services:
     container_name: db_hosteando
     image: postgres:14
     ports:
-      - 5432:5432
+      - 5431:5432
     environment:
       - POSTGRES_USER=userhosteando
       - POSTGRES_PASSWORD=1234
