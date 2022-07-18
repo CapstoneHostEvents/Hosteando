@@ -23,7 +23,7 @@ export const CreateEventService = async ({name, description, date, user } : IEve
   if (findEvent) {
     throw new AppError("This event already exists", 403)
   }
-
+  
   const event = await eventRepository.create({
     name, 
     description, 
