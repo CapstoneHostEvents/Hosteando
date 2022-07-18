@@ -7,19 +7,24 @@ import { ListOneEventService } from "../../services/event/listOneEvent.service"
 import { UpdateEventService } from "../../services/event/updateEvent.service"
 
 export class CreateEventController {
-  static async create (req: Request, res: Response) {
-    const { name, description, date } = req.newEvent
-    const user = req.user.id
-    
-    const newEvent = await CreateEventService({name, description, date, user})
+  static async create(req: Request, res: Response) {
+    const { name, description, date } = req.newEvent;
+    const user = req.user;
 
-    return res.status(201).json(newEvent)
+    const newEvent = await CreateEventService({
+      name,
+      description,
+      date,
+      user,
+    });
+
+    return res.json(newEvent);
   }
 
-  static async read (req: Request, res: Response) {
-    const events = await ListEventService()
+  static async read(req: Request, res: Response) {
+    const events = await ListEventService();
 
-    return res.status(200).json(events)
+    return res.status(200).json(events);
   }
 
   static async readOneEvent(req: Request, res: Response) {

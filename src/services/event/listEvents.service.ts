@@ -1,10 +1,11 @@
-import { AppDataSource } from "../../data-source"
-import { Event } from "../../entities/Event"
+import { AppDataSource } from "../../data-source";
+import { Event } from "../../entities/Event";
 
 export const ListEventService = async () => {
   const eventRepository = AppDataSource.getRepository(Event)
 
-  const event = await eventRepository.find()
+  const event = await eventRepository.find();
 
   return event
 }
+

@@ -20,21 +20,21 @@ const userLoginService = async ({
   });
 
   if (!user) {
-    throw new AppError("Invalid permission", 403);
+    throw new AppError("Wrong email/password", 403);
   }
 
   const comparePassword = await compare(password, user.password);
 
   if (!comparePassword) {
-    throw new AppError("Email or password incorrect", 403);
+    throw new AppError("Wrong email/password", 403);
   }
 
   const token = jwt.sign(
     {
-      id: user.id, //preciso insirir dentro do token tanto o id do user quanto o status de isAdm para validação no middlware
+      id: user.id, //preciso inserir dentro do token tanto o id do user quanto o status de isAdm para validação no middlware
       adm: user.isAdm,
     },
-    process.env.SECRET_KEY as string,//preciso desse alias pq caso contrário gera error.
+    process.env.SECRET_KEY as string, //preciso desse alias pq caso contrário gera error.
     {
       expiresIn: "24h",
     }

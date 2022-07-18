@@ -2,13 +2,13 @@
 
 ## Contents
 
-- [Overview](#1-visão-geral)
-- [ER Diagram](#2-diagrama-er)
-- [Quick Start](#3-início-rápido)
-  - [Installing Dependencies](#31-instalando-dependências)
-  - [Environment variables](#32-variáveis-de-ambiente)
+- [Overview](#1-overview)
+- [ER Diagram](#2-er-diagram)
+- [Quick Start](#3-quick-start)
+  - [Installing Dependencies](#31-installing-dependencies)
+  - [Environment variables](#32-environment-variables)
   - [Migrations](#33-migrations)
-- [Endpoints](#5-endpoints)
+- [Endpoints](#4-endpoints)
 
 ---
 
@@ -56,6 +56,14 @@ yarn
 Then, create a file **.env**, copying file format **.env.example**.
 Configure your environment variables with your Postgres credentials.
 
+Create database as data entered in **.env**.
+
+Run:
+
+```
+yarn dev
+```
+
 ### 3.3. Migrations
 
 Run migrations with the command:
@@ -73,23 +81,24 @@ yarn typeorm migration:run -d src/data-source.ts
 ### Índice
 
 - [User](#41-user)
-  - [POST - /user](#411-create-user)
-  - [GET - /user](#412-list-all-users)
-  - [GET - /user/me](#413-list-user-by-id)
-  - [PATCH - /user](#414-update-user-data)
-  - [DELETE - /user](#415-delete-user)
-  - [POST - /user/login](#416-login-user)
+  - [POST - /users](#411-create-user)
+  - [GET - /users](#412-list-all-users)
+  - [GET - /users/<user_id>](#413-list-user-by-id)
+  - [PATCH - /users/<user_id>](#414-update-user-data)
+  - [DELETE - /users](#415-delete-user)
+  - [POST - /login](#416-login)
 - [Event](#42-event)
   - [POST - /event](#421-create-event)
   - [GET - /event](#422-list-all-events)
   - [PATCH - /event/<event_id>](#423-update-event)
   - [DELETE - /event/<event_id>](#424-delete-event)
 - [Zone](#43-zone)
-  - [POST - /zone](#431-create-zone)
-  - [GET - /zone](#432-list-all-zones)
-  - [GET - /zone/<event_id>](#433-list-all-zones-by-event)
-  - [PATCH - /zone](#434-update-zone)
-  - [DELETE - /zone](#435-delete-zone)
+  - [POST - /zones](#431-create-zone)
+  - [GET - /zones](#432-list-all-zones)
+  - [GET - /zones/<zone_id>](#433-list-zone-by-id)
+  - [GET - /zones/event/<event_id>](#434-list-all-zones-by-event)
+  - [PATCH - /zone](#435-update-zone)
+  - [DELETE - /zone](#436-delete-zone)
 - [Ticket](#44-ticket)
   - [POST - /ticket](#441-buy-ticket)
   - [GET - /ticket](#442-list-all-tickets)
@@ -116,14 +125,14 @@ The User object is defined as:
 
 ## Endpoints
 
-| Method | Endpoint    | Responsability                                      |
-| ------ | ----------- | --------------------------------------------------- |
-| POST   | /user       | Create user                                         |
-| GET    | /user       | List all users                                      |
-| GET    | /user/me    | List the user with the corresponding id             |
-| PATCH  | /user       | Update user data (needs token)                      |
-| DELETE | /user       | Delete user from database (needs token)             |
-| GET    | /user/login | Receive e-mail and user's password, return an token |
+| Method | Endpoint        | Responsability                                      |
+| ------ | --------------- | --------------------------------------------------- |
+| POST   | /users          | Create user                                         |
+| GET    | /users          | List all users                                      |
+| GET    | /users/<userId> | List the user with the corresponding id             |
+| PATCH  | /users/<userId> | Update user data (needs token)                      |
+| DELETE | /users/<userId> | Delete user from database (needs token)             |
+| GET    | /login          | Receive e-mail and user's password, return an token |
 
 ---
 
@@ -131,12 +140,12 @@ The User object is defined as:
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/user`
+### `/users`
 
 ### Example of request:
 
 ```
-POST /user
+POST /users
 Host: https://hosteando.herokuapp.com
 Content-type: application/json
 ```
@@ -160,11 +169,13 @@ Content-type: application/json
 
 ```json
 {
-  "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+  "id": "8b3b6941-d65f-4e32-a8e0-89dfbd75a735",
   "name": "Ana",
   "email": "ana@mail.com",
+  "password": "$2a$10$1DCOgkbxWcwE4rfOjIO8Z.2lqhmkVi5vhFHSfqkaAhTzC8WKzANk.",
   "isAdm": true,
-  "created_at": "2022-07-12 10:00:01"
+  "created_at": "2022-07-14T19:01:11.951Z",
+  "updated_at": "2022-07-14T19:01:11.951Z"
 }
 ```
 
@@ -178,15 +189,16 @@ Content-type: application/json
 
 ### 4.1.2. **List all users**
 
-[ Back to endpoints ](#5-endpoints)
+[ Back to endpoints ](#4-endpoints)
 
-### `/user`
+### `/users`
 
 ### Example of request:
 
 ```
-GET /user
+GET /users
 Host: https://hosteando.herokuapp.com
+Authorization
 Content-type: application/json
 ```
 
@@ -205,17 +217,22 @@ Empty
 ```json
 [
   {
-    "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
-    "name": "Ana",
-    "email": "ana@mail.com",
-    "isAdm": true
-  },
-
-  {
-    "id": "8mhtd28c4-e540-2w9r-ipa7-j86346d10986",
+    "id": "ab72896d-c542-4eed-bca0-6f388472b559",
     "name": "Maria",
     "email": "maria@mail.com",
+    "password": "$2a$10$GfQKJ9J9ZluaLgj9CMoObebUPo4eKuchkUb2SWc/zmp54AyTOiL16",
+    "created_at": "2022-07-14T18:06:53.061Z",
+    "updated_at": "2022-07-14T18:06:53.061Z",
     "isAdm": false
+  },
+  {
+    "id": "8b3b6941-d65f-4e32-a8e0-89dfbd75a735",
+    "name": "Ana",
+    "email": "ana@mail.com",
+    "password": "$2a$10$1DCOgkbxWcwE4rfOjIO8Z.2lqhmkVi5vhFHSfqkaAhTzC8WKzANk.",
+    "created_at": "2022-07-14T19:01:11.951Z",
+    "updated_at": "2022-07-14T19:01:11.951Z",
+    "isAdm": true
   }
 ]
 ```
@@ -226,16 +243,16 @@ None, the maximum that can return an empty list.
 
 ---
 
-### 4.1.3. **List the user with the corresponding id**
+### 4.1.3. **List user by id**
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/user/me`
+### `/users/<userId>`
 
 ### Example of request:
 
 ```
-GET /users/me
+GET /users/<userId>
 Host: https://hosteando.herokuapp.com
 Content-type: application/json
 ```
@@ -260,9 +277,12 @@ Empty
 
 ```json
 {
-  "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+  "id": "8b3b6941-d65f-4e32-a8e0-89dfbd75a735",
   "name": "Ana",
   "email": "ana@mail.com",
+  "password": "$2a$10$1DCOgkbxWcwE4rfOjIO8Z.2lqhmkVi5vhFHSfqkaAhTzC8WKzANk.",
+  "created_at": "2022-07-14T19:01:11.951Z",
+  "updated_at": "2022-07-14T19:01:11.951Z",
   "isAdm": true
 }
 ```
@@ -279,15 +299,15 @@ Empty
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/user`
+### `/users/<userId>`
 
 ### Example of request:
 
 ```
-PATCH /user
+PATCH /users<userId>
 Host: https://hosteando.herokuapp.com
 Authorization
-Content-type: application/json
+Content-type: application/json+
 ```
 
 ### Request parameters:
@@ -300,11 +320,7 @@ Content-type: application/json
 
 ```json
 {
-  "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
-  "name": "Ana Paula",
-  "email": "ana@mail.com",
-  "isAdm": true,
-  "update_at": "2022-07-12 12:48:23"
+  "name": "Ana Paula"
 }
 ```
 
@@ -316,10 +332,7 @@ Content-type: application/json
 
 ```json
 {
-  "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
-  "name": "Ana Paula",
-  "email": "ana@mail.com",
-  "isAdm": true
+  "message": "User updated!"
 }
 ```
 
@@ -331,16 +344,16 @@ Content-type: application/json
 
 ---
 
-### 4.1.5. **Delete user from database**
+### 4.1.5. **Delete user**
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/user`
+### `/users/<userId>`
 
 ### Example of request:
 
 ```
-DELETE /user
+DELETE /users/<userId>
 Host: https://hosteando.herokuapp.com
 Authorization
 Content-type: application/json
@@ -364,6 +377,12 @@ Empty
 200 OK
 ```
 
+```json
+{
+  "message": "User deleted!"
+}
+```
+
 ### Possible errors:
 
 | Error code | Description    |
@@ -376,12 +395,12 @@ Empty
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/user/login`
+### `/login`
 
 ### Example of request:
 
 ```
-GET /user/login
+GET /login
 Host: https://hosteando.herokuapp.com
 Content-type: application/json
 ```
@@ -417,6 +436,129 @@ Content-type: application/json
 
 ## 4.2. **Event**
 
+[ Back to endpoints ](#4-endpoints)
+
+The Event object is defined as:
+
+| Field       | Type   | Description                    |
+| ----------- | ------ | ------------------------------ |
+| id          | string | Event's unique identifier      |
+| name        | string | Username                       |
+| description | string | Description of the event       |
+| date        | string | Date of the event              |
+| created_by  | string | Admin responsible for creating |
+| created_at  | string | Event creation date            |
+
+## Endpoints
+
+| Method | Endpoint | Responsability  |
+| ------ | -------- | --------------- |
+| POST   | /event   | Create event    |
+| GET    | /event   | List all events |
+| PATCH  | /event   | Update event    |
+| DELETE | /event   | Delete event    |
+
+---
+
+### 4.2.1. **Create event**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/event`
+
+### Example of request:
+
+```
+POST /event
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+{
+  "name": "Rock in Rio",
+  "description": "Festival de música e entretenimento",
+  "date": "2025-07-07 17:01:18.410677""
+}
+```
+
+### Example of response:
+
+```
+201 Created
+```
+
+```json
+{
+  "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+  "name": "Rock in Rio",
+  "description": "Festival de música e entretenimento",
+  "date": "2025-07-07T20:01:18.410Z",
+  "created_at": "2022-07-14T19:27:02.905Z"
+}
+```
+
+### Possible errors:
+
+| Error code      | Description               |
+| --------------- | ------------------------- |
+| 400 bad request | This event already exists |
+
+---
+
+### 4.2.2. **List all events**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/event`
+
+### Example of request:
+
+```
+GET /event
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "9cda28c9-e540-4b2c-bf0c-c90006d37893",
+    "name": "Rock in Rio",
+    "description": "Festival de música e entretenimento",
+    "date": "2022-09-12 18:00:23",
+    "created_at": "2022-07-12 12:48:23"
+  },
+
+  {
+    "id": "9c251ec9-ece0-4ejnf2c-c9001ef1ewwfe93",
+    "name": "Lollapalooza",
+    "description": "Festival de música e entretenimento",
+    "date": "2022-12-12 18:00:23",
+    "created_at": "2022-07-12 12:48:23"
+  }
+]
+```
+
+### Possible errors:
+
+None, the maximum that can return an empty list.
+
 ---
 
 ## 4.3. **Zone**
@@ -425,25 +567,388 @@ Content-type: application/json
 
 The Zone object is defined as:
 
-| Field         | Type   | Description              |
-| ------------- | ------ | ------------------------ |
-| id            | string | Zone's unique identifier |
-| name          | string | Username                 |
-| price         | number |                          |
-| total_tickets | number |                          |
-| eventId       | string |                          |
+| Field         | Type   | Description                       |
+| ------------- | ------ | --------------------------------- |
+| id            | string | Zone's unique identifier          |
+| name          | string | Username                          |
+| price         | number | Ticket value in the zone          |
+| total_tickets | number | Total number of tickets available |
+| eventId       | string | Relationship with event id        |
 
 ## Endpoints
 
-| Method | Endpoint               | Responsability                          |
-| ------ | ---------------------- | --------------------------------------- |
-| POST   | /zone                  | Create zone                             |
-| GET    | /zone                  | List all zones                          |
+| Method | Endpoint              | Responsability                          |
+| ------ | --------------------- | --------------------------------------- |
+| POST   | /zone                 | Create zone                             |
+| GET    | /zone                 | List all zones                          |
 | GET    | /zone/<zone_id>        | List the zone with the corresponding id |
 | GET    | /zone/event/<event_id> | List all zones from of an event         |
-| PATCH  | /zone                  | Update zone info                        |
-| DELETE | /zone                  | Delete zone                             |
+| PATCH  | /zone                 | Update zone info                        |
+| DELETE | /zone                 | Delete zone                             |
+
+---
+
+### 4.3.1. **Create zone**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zones`
+
+### Example of request:
+
+```
+POST /zones
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+{
+  "name": "Camarote",
+  "price": 420.0,
+  "total_tickets": 850,
+  "eventId": "c1e4d222-3e5d-45de-94b5-1656112d9046"
+}
+```
+
+### Example of response:
+
+```
+201 Created
+```
+
+```json
+{
+  "id": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
+  "name": "Camarote",
+  "price": 420,
+  "total_tickets": 850,
+  "event": {
+    "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+    "name": "Rock in Rio",
+    "description": "Festival de música e entretenimento",
+    "date": "2025-07-07T20:01:18.410Z",
+    "created_at": "2022-07-14T19:27:02.905Z"
+  },
+  "created_at": "2022-07-14T19:32:48.406Z"
+}
+```
+
+### Possible errors:
+
+| Error code      | Description                       |
+| --------------- | --------------------------------- |
+| 400 bad request | Name alrealdy used for that event |
+
+---
+
+### 4.3.2. **List all zones**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zones`
+
+### Example of request:
+
+```
+GET /zones
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
+    "name": "Camarote",
+    "price": 420,
+    "total_tickets": 850,
+    "created_at": "2022-07-14T19:32:48.406Z",
+    "event": {
+      "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+      "name": "Rock in Rio",
+      "description": "Festival de música e entretenimento",
+      "date": "2025-07-07T20:01:18.410Z",
+      "created_at": "2022-07-14T19:27:02.905Z"
+    }
+  },
+  {
+    "id": "5sc1e5f2e-f52w-8926-6d8f-2c98d1v5df51c",
+    "name": "Pista",
+    "price": 90,
+    "total_tickets": 6900,
+    "created_at": "2022-07-14T19:32:48.406Z",
+    "event": {
+      "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+      "name": "Rock in Rio",
+      "description": "Festival de música e entretenimento",
+      "date": "2025-07-07T20:01:18.410Z",
+      "created_at": "2022-07-14T19:27:02.905Z"
+    }
+  }
+]
+```
+
+### Possible errors:
+
+None, the maximum that can return an empty list.
+
+---
+
+### 4.3.3. **List zone by id**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zones/<zoneId>`
+
+### Example of request:
+
+```
+GET /zone/<zoneId>
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request parameters:
+
+| Parameter | Type   | Description              |
+| --------- | ------ | ------------------------ |
+| zoneId    | string | Zone's unique identifier |
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+{
+  "id": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
+  "name": "Camarote",
+  "price": 420,
+  "total_tickets": 850,
+  "created_at": "2022-07-14T19:32:48.406Z",
+  "event": {
+    "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+    "name": "Rock in Rio",
+    "description": "Festival de música e entretenimento",
+    "date": "2025-07-07T20:01:18.410Z",
+    "created_at": "2022-07-14T19:27:02.905Z"
+  }
+}
+```
+
+### Possible errors:
+
+| Error code | Description    |
+| ---------- | -------------- |
+| 404        | Zone not found |
+
+---
+
+### 4.3.4. **List all zones by event**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/zone/event/<eventId>`
+
+### Example of request:
+
+```
+GET /zone/event/<eventId>
+Host: https://hosteando.herokuapp.com
+Content-type: application/json
+```
+
+### Request parameters:
+
+| Parameter | Type   | Description               |
+| --------- | ------ | ------------------------- |
+| eventId   | string | Event's unique identifier |
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
+    "name": "Camarote",
+    "price": 420,
+    "total_tickets": 850,
+    "created_at": "2022-07-14T19:32:48.406Z",
+    "event": {
+      "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+      "name": "Rock in Rio",
+      "description": "Festival de música e entretenimento",
+      "date": "2025-07-07T20:01:18.410Z",
+      "created_at": "2022-07-14T19:27:02.905Z"
+    }
+  },
+  {
+    "id": "5sc1e5f2e-f52w-8926-6d8f-2c98d1v5df51c",
+    "name": "Pista",
+    "price": 90,
+    "total_tickets": 6900,
+    "created_at": "2022-07-14T19:32:48.406Z",
+    "event": {
+      "id": "c1e4d222-3e5d-45de-94b5-1656112d9046",
+      "name": "Rock in Rio",
+      "description": "Festival de música e entretenimento",
+      "date": "2025-07-07T20:01:18.410Z",
+      "created_at": "2022-07-14T19:27:02.905Z"
+    }
+  }
+]
+```
+
+### Possible errors:
+
+| Error code | Description     |
+| ---------- | --------------- |
+| 404        | Event not found |
 
 ---
 
 ## 4.4. **Ticket**
+
+[ Back to endpoints ](#4-endpoints)
+
+The Ticket object is defined as:
+
+| Field      | Type   | Description                |
+| ---------- | ------ | -------------------------- |
+| id         | string | Ticket's unique identifier |
+| zoneId     | string | Relationship with zone id  |
+| userId     | number | Relationship with user id  |
+| created_at | number | Event creation date        |
+
+## Endpoints
+
+| Method | Endpoint | Responsability            |
+| ------ | -------- | ------------------------- |
+| POST   | /tickets  | Buy an ticket             |
+| GET    | /tickets  | List all tickets          |
+| GET    | /tickets  | List all the user tickets |
+| DELETE | /tickets  | Delete ticket             |
+
+---
+
+### 4.4.1. **Buy ticket**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/tickets`
+
+### Example of request:
+
+```
+POST /tickets
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+{
+  "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+  "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c"
+}
+```
+
+### Example of response:
+
+```
+201 Created
+```
+
+```json
+{
+  "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
+  "created_at": "2022-07-15T14:06:45.088Z",
+  "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+  "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c"
+}
+```
+
+### Possible errors:
+
+| Error code      | Description                                     |
+| --------------- | ----------------------------------------------- |
+| 409 bad request | All tickets from this zone were already created |
+
+---
+
+### 4.4.2. **List all tickets**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/tickets`
+
+### Example of request:
+
+```
+GET /tickets
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
+    "created_at": "2022-07-15T14:06:45.088Z"
+  }
+]
+```
+
+### Possible errors:
+
+None, the maximum that can return an empty list.
+
+---
