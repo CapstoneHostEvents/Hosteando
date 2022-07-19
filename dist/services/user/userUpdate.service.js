@@ -31,36 +31,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateEventCreate = exports.handleEventError = void 0;
-const yup = __importStar(require("yup"));
-exports.handleEventError = yup.object().shape({
-    name: yup.string().required(),
-    description: yup.string().required(),
-    date: yup.date().required(),
-    user: yup.string()
-});
-const validateEventCreate = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    try {
-        const data = req.body;
-        try {
-            const validatedData = yield schema.validate(data, {
-                abortEarly: false,
-                stripUnknown: true,
-            });
-            req.newEvent = validatedData;
-            next();
-        }
-        catch (err) {
-            return res.status(400).json({
-                status: "error",
-                error: (_a = err.errors) === null || _a === void 0 ? void 0 : _a.join(", "),
-            });
-        }
+const data_source_1 = require("../../data-source");
+const User_1 = require("../../entities/User");
+const app_error_1 = __importDefault(require("../../errors/app-error"));
+const bcrypt = __importStar(require("bcryptjs"));
+const userUpdateService = ({ id, isAdm, name, email, password, }) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
+    const user = yield userRepository.findOne({
+        where: { id },
+    });
+    if (!user) {
+        throw new app_error_1.default("User not found!", 404);
     }
-    catch (err) {
-        next(err);
-    }
+    isAdm ? (user.isAdm = isAdm) : user.isAdm;
+    name ? (user.name = name) : user.name;
+    email ? (user.email = email) : user.email;
+    password ? (user.password = yield bcrypt.hash(password, 10)) : user.password;
+    return userRepository.save(user);
 });
-exports.validateEventCreate = validateEventCreate;
+exports.default = userUpdateService;

@@ -9,20 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createEvent1657754654328 = void 0;
-class createEvent1657754654328 {
+exports.removeDuplicates1657651052336 = void 0;
+class removeDuplicates1657651052336 {
     constructor() {
-        this.name = 'createEvent1657754654328';
+        this.name = 'removeDuplicates1657651052336';
     }
     up(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`CREATE TABLE "event" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" character varying NOT NULL, "description" character varying NOT NULL, "date" TIMESTAMP NOT NULL, "created_by" TIMESTAMP NOT NULL DEFAULT now(), "created_at" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_30c2f3bbaf6d34a55f8ae6e4614" PRIMARY KEY ("id"))`);
+            yield queryRunner.query(`ALTER TABLE "event" DROP COLUMN "created_by"`);
         });
     }
     down(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`DROP TABLE "event"`);
+            yield queryRunner.query(`ALTER TABLE "event" ADD "created_by" character varying NOT NULL`);
         });
     }
 }
-exports.createEvent1657754654328 = createEvent1657754654328;
+exports.removeDuplicates1657651052336 = removeDuplicates1657651052336;
