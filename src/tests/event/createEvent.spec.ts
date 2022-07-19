@@ -151,6 +151,22 @@ describe("Create a Event", () => {
     expect(response.body).toHaveProperty("description")
     expect(response.body).toHaveProperty("date")
     expect(response.body).toHaveProperty("created_at")
+    expect(response.body).toHaveProperty("user")
+  })
+
+  // 4 - UPDATE AN EVENT
+
+  it("Trying to update an event", async () => {
+    const response = await request(app)
+      .get(`/event/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm}`)
+
+    expect(response.status).toBe(200)
+    expect(response.body).toHaveProperty("id")
+    expect(response.body).toHaveProperty("name")
+    expect(response.body).toHaveProperty("description")
+    expect(response.body).toHaveProperty("date")
+    expect(response.body).toHaveProperty("created_at")
   })
 
   it("Trying to list an event", async () => {

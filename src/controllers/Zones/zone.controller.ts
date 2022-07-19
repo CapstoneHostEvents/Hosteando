@@ -1,47 +1,64 @@
 import { Request, Response } from "express";
-import CreateZoneService from "../../services/Zones/CreateZone.services";
-import ListZoneService from "../../services/Zones/ListZone.services";
-import RetrieveEventZoneService from "../../services/Zones/RetrieveEventZone.services";
-import RetrieveZoneService from "../../services/Zones/RetrieveZone.services";
+import userDeleteService from "../../services/user/userDelete.service";
+import createZoneService from "../../services/zone/zoneCreate.services";
+import zoneDeleteService from "../../services/zone/zoneDelete.service";
+import listZoneService from "../../services/zone/zoneList.services";
+import retrieveZoneService from "../../services/zone/zoneListIndex.services";
+import zoneUpdateService from "../../services/zone/zoneUpdate.service";
 
 export default class ZoneController {
+  //Criando Zone
   async store(req: Request, res: Response) {
     const { name, price, total_tickets, eventId } = req.body;
-    const createZoneService = new CreateZoneService();
+    const userId = req.user.id;
 
-    const zone = await createZoneService.execute({
+    const zone = await createZoneService({
       name,
       price,
       total_tickets,
       eventId,
+      userId,
     });
 
     return res.status(201).json(zone);
   }
 
-  async show(req: Request, res: Response) {
-    const listZoneService = new ListZoneService();
-
-    const zones = await listZoneService.execute();
+  //Listando todos as Zones
+  async index(req: Request, res: Response) {
+    const zones = await listZoneService();
 
     return res.status(200).json(zones);
   }
 
-  async index(req: Request, res: Response) {
-    const retrieveZoneService = new RetrieveZoneService();
+  //Listar Zone por Id
+  async show(req: Request, res: Response) {
     const zoneId = req.params.zoneId;
 
-    const zone = await retrieveZoneService.execute(zoneId);
+    const zone = await retrieveZoneService(zoneId);
 
     return res.status(200).json(zone);
   }
 
-  async indexEvent(req: Request, res: Response) {
-    const retrieveEventZoneService = new RetrieveEventZoneService();
-    const eventId = req.params.eventId;
+  //Atualizar Zone por id
+  async update(req: Request, res: Response) {
+    const zoneId = req.params.zoneId;
+    const { name, price, total_tickets, eventId } = req.body;
 
-    const zones = await retrieveEventZoneService.execute(eventId);
+    const updateZone = await zoneUpdateService({
+      name,
+      price,
+      total_tickets,
+      eventId,
+      zoneId,
+    });
+    return res.status(200).json({ message: "Zone updated!" });
+  }
 
-    return res.status(200).json(zones);
+  //Deletando User
+  async delete(req: Request, res: Response) {
+    const zoneId = req.params.zoneId;
+
+    const deleteUser = await zoneDeleteService(zoneId);
+    return res.status(200).json({ message: "Zone deleted!" });
   }
 }

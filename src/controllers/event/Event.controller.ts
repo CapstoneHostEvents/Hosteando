@@ -9,43 +9,35 @@ export class CreateEventController {
   static async create (req: Request, res: Response) {
     const { name, description, date } = req.newEvent
     const user = req.user.id
-
-    console.log(user)
-    
     const newEvent = await CreateEventService({name, description, date, user})
-
     return res.status(201).json(newEvent)
   }
-
+  
   static async read (req: Request, res: Response) {
     const events = await ListEventService()
-
     return res.status(200).json(events)
   }
-
+  
   static async readOneEvent(req: Request, res: Response) {
     const id = req.params.id
     const event = await ListOneEventService(id)
-
     return res.status(200).json(event);
   }
-
+  
   static async update (req: Request, res: Response) {
     const { name, description, date } = req.body
     const id = req.params.id
     const user = req.user.id
-    
     const newEvent = await UpdateEventService({name, description, date, id, user})
 
     return res.status(200).json(newEvent)
-  }
 
+  }
+  
   static async delete (req: Request, res: Response) {
     const { id } = req.params
     const user = req.user.id
-
     await DeleteEventService(id, user)
-
     return res.status(200).json({ message: "Event deleted!" })
   }
-} 
+}
