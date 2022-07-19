@@ -23,3 +23,9 @@ export interface IUserUp {
   isAdm: boolean;
   password: string;
 }
+
+export interface IEmailRequest {
+  to: string;
+  subject: string;
+  text: string;
+}
