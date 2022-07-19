@@ -12,45 +12,63 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const CreateZone_services_1 = __importDefault(require("../../services/Zones/CreateZone.services"));
-const ListZone_services_1 = __importDefault(require("../../services/Zones/ListZone.services"));
-const RetrieveEventZone_services_1 = __importDefault(require("../../services/Zones/RetrieveEventZone.services"));
-const RetrieveZone_services_1 = __importDefault(require("../../services/Zones/RetrieveZone.services"));
+const zoneCreate_services_1 = __importDefault(require("../../services/zone/zoneCreate.services"));
+const zoneDelete_service_1 = __importDefault(require("../../services/zone/zoneDelete.service"));
+const zoneList_services_1 = __importDefault(require("../../services/zone/zoneList.services"));
+const zoneListIndex_services_1 = __importDefault(require("../../services/zone/zoneListIndex.services"));
+const zoneUpdate_service_1 = __importDefault(require("../../services/zone/zoneUpdate.service"));
 class ZoneController {
+    //Criando Zone
     store(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, price, total_tickets, eventId } = req.body;
-            const createZoneService = new CreateZone_services_1.default();
-            const zone = yield createZoneService.execute({
+            const userId = req.user.id;
+            const zone = yield (0, zoneCreate_services_1.default)({
                 name,
                 price,
                 total_tickets,
                 eventId,
+                userId,
             });
             return res.status(201).json(zone);
         });
     }
-    show(req, res) {
+    //Listando todos as Zones
+    index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const listZoneService = new ListZone_services_1.default();
-            const zones = yield listZoneService.execute();
+            const zones = yield (0, zoneList_services_1.default)();
             return res.status(200).json(zones);
         });
     }
-    index(req, res) {
+    //Listar Zone por Id
+    show(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const retrieveZoneService = new RetrieveZone_services_1.default();
             const zoneId = req.params.zoneId;
-            const zone = yield retrieveZoneService.execute(zoneId);
+            const zone = yield (0, zoneListIndex_services_1.default)(zoneId);
             return res.status(200).json(zone);
         });
     }
-    indexEvent(req, res) {
+    //Atualizar Zone por id
+    update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const retrieveEventZoneService = new RetrieveEventZone_services_1.default();
-            const eventId = req.params.eventId;
-            const zones = yield retrieveEventZoneService.execute(eventId);
-            return res.status(200).json(zones);
+            const zoneId = req.params.zoneId;
+            const { name, price, total_tickets, eventId } = req.body;
+            const updateZone = yield (0, zoneUpdate_service_1.default)({
+                name,
+                price,
+                total_tickets,
+                eventId,
+                zoneId,
+            });
+            return res.status(200).json({ message: "Zone updated!" });
+        });
+    }
+    //Deletando User
+    delete(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const zoneId = req.params.zoneId;
+            const deleteUser = yield (0, zoneDelete_service_1.default)(zoneId);
+            return res.status(200).json({ message: "Zone deleted!" });
         });
     }
 }

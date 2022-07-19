@@ -12,25 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const data_source_1 = require("../../data-source");
-const User_1 = require("../../entities/User");
-const app_error_1 = __importDefault(require("../../errors/app-error"));
-const userListIndexService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-    const user = yield userRepository.find({
-        select: {
-            id: true,
-            name: true,
-            isAdm: true,
-            email: true,
-            created_at: true,
-            updated_at: true,
+const nodemailer_1 = require("nodemailer");
+require("dotenv/config");
+const app_error_1 = __importDefault(require("../errors/app-error"));
+const sendEmailUser = ({ to, subject, text }) => __awaiter(void 0, void 0, void 0, function* () {
+    const transporter = (0, nodemailer_1.createTransport)({
+        host: "smtp-mail.outlook.com",
+        port: 587,
+        secure: false,
+        auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
         },
     });
-    const users = user.find((userId) => userId.id === id);
-    if (!users) {
-        throw new app_error_1.default("User not found!", 404);
-    }
-    return users;
+    yield transporter
+        .sendMail({
+        from: "userhosteando@outlook.com",
+        to: to,
+        subject: subject,
+        html: text,
+    })
+        .then(() => {
+        console.log("Email sent with success");
+    })
+        .catch((err) => {
+        console.log(err);
+        throw new app_error_1.default("Error sendind email, try again", 500);
+    });
 });
-exports.default = userListIndexService;
+exports.default = sendEmailUser;

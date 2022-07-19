@@ -8,15 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Tickets_1 = require("../../entities/Tickets");
-const data_source_1 = require("../../data-source");
-const ticketListService = () => __awaiter(void 0, void 0, void 0, function* () {
-    const ticketRepository = data_source_1.AppDataSource.getRepository(Tickets_1.Ticket);
-    const ticketList = yield ticketRepository
-        .createQueryBuilder()
-        .select(["Ticket.id, Ticket.user.id, Ticket.zone.id, Ticket.created_at"])
-        .getRawMany();
-    return ticketList;
+const sendEmail_util_1 = __importDefault(require("../../utils/sendEmail.util"));
+const userSendEmailService = ({ to, subject, text, }) => __awaiter(void 0, void 0, void 0, function* () {
+    const htmlText = `<h1 style=\"background-color:powderblue\">${subject}</h1><h3 style=\"font-size:160%;\">${text} segue o link https://www.youtube.com/watch?v=QPJQhNDQhk8</h3>`;
+    yield (0, sendEmail_util_1.default)({ subject, text: htmlText, to });
 });
-exports.default = ticketListService;
+exports.default = userSendEmailService;

@@ -13,6 +13,6 @@ const userController = new userControllers_1.default();
 userRouter.post("", (0, schemaValidation_middleware_1.validateUserCreate)(schemaValidation_middleware_1.handleUserError), userController.store);
 userRouter.get("", auth_middleware_1.default, isAdmUser_middleware_1.default, userController.index);
 userRouter.get("/:id", userController.show);
-userRouter.patch("/:id", userController.update);
+userRouter.patch("/:id", (0, schemaValidation_middleware_1.validateUserCreate)(schemaValidation_middleware_1.handleUserError), userController.update);
 userRouter.delete("/:id", userController.delete);
 exports.default = userRouter;

@@ -8,15 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const Tickets_1 = require("../../entities/Tickets");
 const data_source_1 = require("../../data-source");
-const ticketListService = () => __awaiter(void 0, void 0, void 0, function* () {
-    const ticketRepository = data_source_1.AppDataSource.getRepository(Tickets_1.Ticket);
-    const ticketList = yield ticketRepository
-        .createQueryBuilder()
-        .select(["Ticket.id, Ticket.user.id, Ticket.zone.id, Ticket.created_at"])
-        .getRawMany();
-    return ticketList;
+const Zone_1 = require("../../entities/Zone");
+const app_error_1 = __importDefault(require("../../errors/app-error"));
+const retrieveZoneService = (zoneId) => __awaiter(void 0, void 0, void 0, function* () {
+    const zoneRepository = data_source_1.AppDataSource.getRepository(Zone_1.Zone);
+    const zone = yield zoneRepository.findOneBy({
+        id: zoneId,
+    });
+    if (!zone)
+        throw new app_error_1.default("Zone not found", 404);
+    return zone;
 });
-exports.default = ticketListService;
+exports.default = retrieveZoneService;

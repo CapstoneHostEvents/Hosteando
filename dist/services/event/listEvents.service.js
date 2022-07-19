@@ -15,7 +15,6 @@ const Event_1 = require("../../entities/Event");
 const ListEventService = () => __awaiter(void 0, void 0, void 0, function* () {
     const eventRepository = data_source_1.AppDataSource.getRepository(Event_1.Event);
     const event = yield eventRepository.find();
-    console.log(event[2]);
     return event;
 });
 exports.ListEventService = ListEventService;

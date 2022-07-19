@@ -12,25 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ListOneEventService = void 0;
 const data_source_1 = require("../../data-source");
-const User_1 = require("../../entities/User");
+const Event_1 = require("../../entities/Event");
 const app_error_1 = __importDefault(require("../../errors/app-error"));
-const userListIndexService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-    const user = yield userRepository.find({
-        select: {
-            id: true,
-            name: true,
-            isAdm: true,
-            email: true,
-            created_at: true,
-            updated_at: true,
-        },
-    });
-    const users = user.find((userId) => userId.id === id);
-    if (!users) {
-        throw new app_error_1.default("User not found!", 404);
+const ListOneEventService = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    if (id.length !== 36) {
+        throw new app_error_1.default("Wrong event id", 404);
     }
-    return users;
+    const eventRepository = data_source_1.AppDataSource.getRepository(Event_1.Event);
+    const event = yield eventRepository.findOneBy({
+        id: id
+    });
+    console.log(`Event: ${event}`);
+    if (!event)
+        throw new app_error_1.default("Event not found", 404);
+    return event;
 });
-exports.default = userListIndexService;
+exports.ListOneEventService = ListOneEventService;

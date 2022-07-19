@@ -12,36 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateEventService = void 0;
-const Event_1 = require("../../entities/Event");
-const User_1 = require("../../entities/User");
+exports.UpdateEventService = void 0;
 const data_source_1 = require("../../data-source");
+const Event_1 = require("../../entities/Event");
 const app_error_1 = __importDefault(require("../../errors/app-error"));
-const CreateEventService = ({ name, description, date, user, }) => __awaiter(void 0, void 0, void 0, function* () {
+const UpdateEventService = ({ name, description, date, id, user }) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log(`userId ${user}`)
+    // console.log(`EventId ${id}`)
+    if (id.length !== 36) {
+        throw new app_error_1.default("Wrong event id", 404);
+    }
     const eventRepository = data_source_1.AppDataSource.getRepository(Event_1.Event);
-    const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-    const findEvent = yield eventRepository.findOne({
-        where: { name },
+    const event = yield eventRepository.findOneBy({
+        id: id
     });
-    const userData = yield userRepository.findOneBy({
-        id: user
-    });
-    if ((userData === null || userData === void 0 ? void 0 : userData.id) !== user) {
-        // console.log("caius aqui");
-        // console.log(userData);
-        // console.log(user);
+    console.log(event);
+    if (!event) {
+        throw new app_error_1.default("Event not found", 404);
+    }
+    // console.log(`event: ${event.user.id}`)
+    if ((event === null || event === void 0 ? void 0 : event.user.id) !== user) {
         throw new app_error_1.default("No permission allowed", 403);
     }
-    if (findEvent) {
-        throw new app_error_1.default("This event already exists", 403);
-    }
-    const event = yield eventRepository.create({
-        name,
-        description,
-        date,
-        user: user
-    });
+    name ? (event.name = name) : event.name;
+    description ? (event.description = description) : event.description;
+    date ? (event.date = date) : event.date;
     yield eventRepository.save(event);
     return event;
 });
-exports.CreateEventService = CreateEventService;
+exports.UpdateEventService = UpdateEventService;

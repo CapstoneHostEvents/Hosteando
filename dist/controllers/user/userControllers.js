@@ -17,6 +17,7 @@ const userDelete_service_1 = __importDefault(require("../../services/user/userDe
 const userList_service_1 = __importDefault(require("../../services/user/userList.service"));
 const userListIndex_service_1 = __importDefault(require("../../services/user/userListIndex.service"));
 const userLogin_service_1 = __importDefault(require("../../services/user/userLogin.service"));
+const userSendEmail_service_1 = __importDefault(require("../../services/user/userSendEmail.service"));
 const userUpdate_service_1 = __importDefault(require("../../services/user/userUpdate.service"));
 class UserController {
     //Criando User
@@ -73,9 +74,17 @@ class UserController {
     //Login
     login(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { email, password } = req.body;
+            const { email, password } = req.newLogin;
             const token = yield (0, userLogin_service_1.default)({ email, password });
             return res.status(201).json({ token });
+        });
+    }
+    //Email
+    sendemail(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { subject, to, text } = req.body;
+            const emailuser = yield (0, userSendEmail_service_1.default)({ subject, to, text });
+            return res.status(200).json({ message: "Email succeed" });
         });
     }
 }

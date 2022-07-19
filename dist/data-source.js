@@ -8,15 +8,30 @@ exports.AppDataSource = process.env.NODE_ENV === "test"
     ? new typeorm_1.DataSource({
         type: "sqlite",
         database: ":memory:",
-        entities: ["src/entities/**/*.ts"],
+        entities: ["src/entities/*.ts"],
         synchronize: true,
-    }) :
-    new typeorm_1.DataSource({
-        type: "postgres",
-        url: process.env.DATABASE_URL,
-        ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-        synchronize: false,
-        // logging: true,
-        entities: process.env.NODE_ENV === "production" ? ["dist/entities/*.js"] : ["src/entities/*.ts"],
-        migrations: process.env.NODE_ENV === "production" ? ["dist/migrations/*.js"] : ["src/migrations/*.ts"],
-    });
+    })
+    : process.env.NODE_ENV === "production"
+        ? new typeorm_1.DataSource({
+            type: "postgres",
+            url: process.env.DATABASE_URL,
+            ssl: process.env.NODE_ENV === "production"
+                ? { rejectUnauthorized: false }
+                : false,
+            synchronize: false,
+            logging: true,
+            entities: ["dist/src/entities/*.js"],
+            migrations: ["dist/src/migrations/*.js"],
+        })
+        : new typeorm_1.DataSource({
+            type: "postgres",
+            host: process.env.DB_HOST,
+            port: 5432,
+            username: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB,
+            synchronize: false,
+            logging: true,
+            entities: ["src/entities/*.ts"],
+            migrations: ["src/migrations/*.ts"],
+        });
