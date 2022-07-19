@@ -5,8 +5,8 @@ import { IEventUpdate, IEventUpdateResponse } from "../../interfaces/events"
 
 export const UpdateEventService = async ({name, description, date, id, user } : IEventUpdate) : Promise<IEventUpdateResponse> => {
   
-  console.log(`userId ${user}`)
-  console.log(`EventId ${id}`)
+  // console.log(`userId ${user}`)
+  // console.log(`EventId ${id}`)
   
   if (id.length !== 36) {
     throw new AppError("Wrong event id", 404)
@@ -18,11 +18,13 @@ export const UpdateEventService = async ({name, description, date, id, user } : 
     id: id
   })
 
+  console.log(event)
+
   if (!event) {
     throw new AppError("Event not found", 404)
   }
 
-  console.log(`event: ${event.user.id}`)
+  // console.log(`event: ${event.user.id}`)
   
   if (event?.user.id !== user) {
     throw new AppError("No permission allowed", 403)

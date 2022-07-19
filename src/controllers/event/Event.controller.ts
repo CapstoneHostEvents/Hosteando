@@ -9,6 +9,8 @@ export class CreateEventController {
   static async create (req: Request, res: Response) {
     const { name, description, date } = req.newEvent
     const user = req.user.id
+
+    console.log(user)
     
     const newEvent = await CreateEventService({name, description, date, user})
 
@@ -35,7 +37,7 @@ export class CreateEventController {
     
     const newEvent = await UpdateEventService({name, description, date, id, user})
 
-    return res.status(201).json(newEvent)
+    return res.status(200).json(newEvent)
   }
 
   static async delete (req: Request, res: Response) {

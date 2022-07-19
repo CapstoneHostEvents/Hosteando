@@ -18,7 +18,7 @@ export const DeleteEventService = async (id: string, user: string) => {
   }
 
   if (event.user.id !== user) {
-    throw new AppError("No permission allowed", 403)
+    throw new AppError("No permission allowed", 404)
   }
 
   await eventRepository.delete(event)
