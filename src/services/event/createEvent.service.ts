@@ -22,9 +22,9 @@ export const CreateEventService = async ({
   })
 
   if (userData?.id !== user) {
-    console.log("caius aqui");
-    console.log(userData);
-    console.log(user);
+    // console.log("caius aqui");
+    // console.log(userData);
+    // console.log(user);
     throw new AppError("No permission allowed", 403);
   }
 

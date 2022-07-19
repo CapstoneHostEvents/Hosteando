@@ -1,24 +1,25 @@
 import { DataSource, InitializedRelationError } from "typeorm";
 import { AppDataSource } from "../../data-source";
-import { describe, expect, test, beforeAll, afterAll } from "@jest/globals";
+import { describe, expect, test, it, beforeAll, afterAll } from "@jest/globals";
 
-import {  ITicketRequest } from "../../interfaces/ticket";
-import { IUser, IUserRequest } from "../../interfaces/user";
+import { ITicketRequest } from "../../interfaces/ticket";
+import { IUserRequest } from "../../interfaces/user";
 import { IZoneCreate } from "../../interfaces/zones";
-import { IEventRequest, IEventResponse } from "../../interfaces/events";
-
-import userCreateService from "../../services/user/userCreate.service";
-import { CreateEventService } from "../../services/event/createEvent.service";
-import CreateZoneService from "../../services/Zones/CreateZone.services";
+import { IEventRequest } from "../../interfaces/events";
 
 import  request from "supertest";
 import app from "../../app";
 
-describe("Create ticket", ()=>{
+describe("List tickets", ()=>{
 
   let connection: DataSource;
-  let userData: IUser;
-  let userData2: IUser;
+
+  let userData: any;
+  let userData2: any;
+
+  let token1: any;
+  let token2: any;
+
   let zoneData: any;
 
   beforeAll(async () => {
@@ -40,16 +41,19 @@ describe("Create ticket", ()=>{
       password: "1234",
       isAdm: false
     }
-    userData = await userCreateService(user);
-    userData2 = await userCreateService(user2);
+
+    userData = await (await request(app).post("/users").send(user)).body
+    userData2 = await (await request(app).post("/users").send(user2)).body
+
+    token1 = await (await request(app).post("/login").send({email: user.email, password: user.password})).body.token
+    token2 = await (await request(app).post("/login").send({email: user2.email, password: user2.password})).body.token
 
     const event:IEventRequest = {
       name: "Rock in Rio",
       description: "Show of rock at Rio",
       date: userData.created_at,
-      user: userData
     }
-    const eventData:IEventResponse = await CreateEventService(event)
+    const eventData = await (await request(app).post("/event").send(event).set("Authorization", `Bearer ${token1}`)).body
     
     const zone:IZoneCreate = {
       name: "camarote",
@@ -58,17 +62,20 @@ describe("Create ticket", ()=>{
       userId: userData.id,
       eventId: eventData.id
     }
-    const createZone = new CreateZoneService()
-    zoneData = await createZone.execute(zone);
+    zoneData = await (await request(app).post("/zones").send(zone).set("Authorization", `Bearer ${token1}`)).body
 
+    console.log("oi antes de tudo")
   })
 
   afterAll(async () => {
     await connection.destroy();
   })
 
-  test("Should be able to create various tickets from different users",async () => {
+
+  test("Should be able to list various tickets from different users",async () => {
    
+    console.log('oi')
+
     const ticket: ITicketRequest = ({
       userId: userData.id,
       zoneId: zoneData.id
@@ -79,9 +86,9 @@ describe("Create ticket", ()=>{
     })
 
     let response:request.Response;
-    await request(app).post('/tickets').send(ticket);
+    await request(app).post('/tickets').send(ticket).set("Authorization", `Bearer ${token1}`);
   
-    response = await request(app).get('/tickets');
+    response = await request(app).get('/tickets').set("Authorization", `Bearer ${token1}`);
 
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(1);
@@ -96,9 +103,9 @@ describe("Create ticket", ()=>{
       ])
     );
 
-    await request(app).post('/tickets').send(ticket2);
+    await request(app).post('/tickets').send(ticket2).set("Authorization", `Bearer ${token2}`);
 
-    response = await request(app).get('/tickets');
+    response = await request(app).get('/tickets').set("Authorization", `Bearer ${token2}`);
 
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(2);
