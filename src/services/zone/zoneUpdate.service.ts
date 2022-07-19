@@ -1,7 +1,7 @@
 import { AppDataSource } from "../../data-source";
 import { Zone } from "../../entities/Zone";
 import AppError from "../../errors/app-error";
-import { IZoneUpdate } from "../../interfaces/zones";
+import { IZoneUpdate } from "../../interfaces/zone";
 
 const zoneUpdateService = async ({
   name,

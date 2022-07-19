@@ -42,7 +42,9 @@ __decorate([
     __metadata("design:type", Event_1.Event)
 ], Zone.prototype, "event", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => Tickets_1.Ticket, (ticket) => ticket.zone),
+    (0, typeorm_1.OneToMany)(() => Tickets_1.Ticket, (ticket) => ticket.zone, {
+        eager: true,
+    }),
     __metadata("design:type", Array)
 ], Zone.prototype, "ticket", void 0);
 __decorate([

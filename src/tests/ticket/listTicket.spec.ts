@@ -4,14 +4,13 @@ import { describe, expect, test, it, beforeAll, afterAll } from "@jest/globals";
 
 import { ITicketRequest } from "../../interfaces/ticket";
 import { IUserRequest } from "../../interfaces/user";
-import { IZoneCreate } from "../../interfaces/zones";
-import { IEventRequest } from "../../interfaces/events";
+import { IZoneCreate } from "../../interfaces/zone";
+import { IEventRequest } from "../../interfaces/event";
 
-import  request from "supertest";
+import request from "supertest";
 import app from "../../app";
 
-describe("List tickets", ()=>{
-
+describe("List tickets", () => {
   let connection: DataSource;
 
   let userData: any;
@@ -23,72 +22,91 @@ describe("List tickets", ()=>{
   let zoneData: any;
 
   beforeAll(async () => {
-    await AppDataSource.initialize().then((res)=>{
-      connection = res
-    }).catch((err) => {
-      console.error("Data Source initialization failed", err)
-    })
+    await AppDataSource.initialize()
+      .then((res) => {
+        connection = res;
+      })
+      .catch((err) => {
+        console.error("Data Source initialization failed", err);
+      });
 
-    const user:IUserRequest = {
+    const user: IUserRequest = {
       name: "paulo",
       email: "paulo@gmail.com",
       password: "1234",
-      isAdm: true
-    }
-    const user2:IUserRequest = {
+      isAdm: true,
+    };
+    const user2: IUserRequest = {
       name: "david",
       email: "david@gmail.com",
       password: "1234",
-      isAdm: false
-    }
+      isAdm: false,
+    };
 
-    userData = await (await request(app).post("/users").send(user)).body
-    userData2 = await (await request(app).post("/users").send(user2)).body
+    userData = await (await request(app).post("/users").send(user)).body;
+    userData2 = await (await request(app).post("/users").send(user2)).body;
 
-    token1 = await (await request(app).post("/login").send({email: user.email, password: user.password})).body.token
-    token2 = await (await request(app).post("/login").send({email: user2.email, password: user2.password})).body.token
+    token1 = await (
+      await request(app)
+        .post("/login")
+        .send({ email: user.email, password: user.password })
+    ).body.token;
+    token2 = await (
+      await request(app)
+        .post("/login")
+        .send({ email: user2.email, password: user2.password })
+    ).body.token;
 
-    const event:IEventRequest = {
+    const event: IEventRequest = {
       name: "Rock in Rio",
       description: "Show of rock at Rio",
       date: userData.created_at,
-    }
-    const eventData = await (await request(app).post("/event").send(event).set("Authorization", `Bearer ${token1}`)).body
-    
-    const zone:IZoneCreate = {
+    };
+    const eventData = await (
+      await request(app)
+        .post("/events")
+        .send(event)
+        .set("Authorization", `Bearer ${token1}`)
+    ).body;
+
+    const zone: IZoneCreate = {
       name: "camarote",
       price: 200,
       total_tickets: 4,
       userId: userData.id,
-      eventId: eventData.id
-    }
-    zoneData = await (await request(app).post("/zones").send(zone).set("Authorization", `Bearer ${token1}`)).body
-
-    console.log("oi antes de tudo")
-  })
+      eventId: eventData.id,
+    };
+    zoneData = await (
+      await request(app)
+        .post("/zones")
+        .send(zone)
+        .set("Authorization", `Bearer ${token1}`)
+    ).body;
+  });
 
   afterAll(async () => {
     await connection.destroy();
-  })
+  });
 
-
-  test("Should be able to list various tickets from different users",async () => {
-   
-    console.log('oi')
-
-    const ticket: ITicketRequest = ({
+  test("Should be able to list various tickets from different users", async () => {
+    const ticket: ITicketRequest = {
       userId: userData.id,
-      zoneId: zoneData.id
-    })
-    const ticket2: ITicketRequest = ({
+      zoneId: zoneData.id,
+    };
+    const ticket2: ITicketRequest = {
       userId: userData2.id,
-      zoneId: zoneData.id
-    })
+      zoneId: zoneData.id,
+    };
 
-    let response:request.Response;
-    await request(app).post('/tickets').send(ticket).set("Authorization", `Bearer ${token1}`);
-  
-    response = await request(app).get('/tickets').set("Authorization", `Bearer ${token1}`);
+    let response: request.Response;
+    await request(app)
+      .post("/tickets")
+      .send(ticket)
+      .set("Authorization", `Bearer ${token1}`);
+
+    response = await request(app)
+      .get("/tickets")
+      .set("Authorization", `Bearer ${token1}`);
 
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(1);
@@ -96,16 +114,21 @@ describe("List tickets", ()=>{
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-            ...ticket,
-            id: response.body[0].id,
-            created_at: response.body[0].created_at,
-          }),
+          ...ticket,
+          id: response.body[0].id,
+          created_at: response.body[0].created_at,
+        }),
       ])
     );
 
-    await request(app).post('/tickets').send(ticket2).set("Authorization", `Bearer ${token2}`);
+    await request(app)
+      .post("/tickets")
+      .send(ticket2)
+      .set("Authorization", `Bearer ${token2}`);
 
-    response = await request(app).get('/tickets').set("Authorization", `Bearer ${token2}`);
+    response = await request(app)
+      .get("/tickets")
+      .set("Authorization", `Bearer ${token2}`);
 
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(2);
@@ -113,10 +136,10 @@ describe("List tickets", ()=>{
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-            ...ticket,
-            id: response.body[0].id,
-            created_at: response.body[0].created_at,
-          }),
+          ...ticket,
+          id: response.body[0].id,
+          created_at: response.body[0].created_at,
+        }),
         expect.objectContaining({
           ...ticket2,
           id: response.body[1].id,
@@ -124,7 +147,5 @@ describe("List tickets", ()=>{
         }),
       ])
     );
-
-  })
-
-})
+  });
+});

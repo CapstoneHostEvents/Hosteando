@@ -13,7 +13,10 @@ const Tickets_1 = require("../../entities/Tickets");
 const data_source_1 = require("../../data-source");
 const ticketListService = () => __awaiter(void 0, void 0, void 0, function* () {
     const ticketRepository = data_source_1.AppDataSource.getRepository(Tickets_1.Ticket);
-    const ticketList = yield ticketRepository.find();
+    const ticketList = yield ticketRepository
+        .createQueryBuilder()
+        .select(["Ticket.id, Ticket.user.id, Ticket.zone.id, Ticket.created_at"])
+        .getRawMany();
     return ticketList;
 });
 exports.default = ticketListService;

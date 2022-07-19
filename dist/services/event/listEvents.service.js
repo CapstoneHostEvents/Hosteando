@@ -9,13 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ListEventService = void 0;
 const data_source_1 = require("../../data-source");
 const Event_1 = require("../../entities/Event");
-const ListEventService = () => __awaiter(void 0, void 0, void 0, function* () {
+const listEventService = () => __awaiter(void 0, void 0, void 0, function* () {
     const eventRepository = data_source_1.AppDataSource.getRepository(Event_1.Event);
     const event = yield eventRepository.find();
-    console.log(event[2]);
     return event;
 });
-exports.ListEventService = ListEventService;
+exports.default = listEventService;

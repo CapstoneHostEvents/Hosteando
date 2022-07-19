@@ -13,7 +13,16 @@ const User_1 = require("../../entities/User");
 const data_source_1 = require("../../data-source");
 const userListService = () => __awaiter(void 0, void 0, void 0, function* () {
     const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-    const users = yield userRepository.find();
+    const users = yield userRepository.find({
+        select: {
+            id: true,
+            name: true,
+            isAdm: true,
+            email: true,
+            created_at: true,
+            updated_at: true,
+        },
+    });
     return users;
 });
 exports.default = userListService;

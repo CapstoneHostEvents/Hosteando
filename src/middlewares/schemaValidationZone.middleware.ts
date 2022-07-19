@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { SchemaOf } from "yup";
-import { IZoneRequest } from "../interfaces/zones";
+import { IZoneRequest } from "../interfaces/zone";
 import * as yup from "yup";
 
 export const handleZoneError: SchemaOf<IZoneRequest> = yup.object().shape({

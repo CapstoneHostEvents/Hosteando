@@ -2,7 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/User";
 import AppError from "../../errors/app-error";
 import * as bcrypt from "bcryptjs";
-import { IUserUp } from "../../interfaces/user";
+import { IUser, IUserUp } from "../../interfaces/user";
 
 const userUpdateService = async ({
   id,
@@ -10,7 +10,7 @@ const userUpdateService = async ({
   name,
   email,
   password,
-}: IUserUp) => {
+}: IUserUp): Promise<IUser> => {
   const userRepository = AppDataSource.getRepository(User);
 
   const user = await userRepository.findOne({
@@ -19,7 +19,7 @@ const userUpdateService = async ({
   if (!user) {
     throw new AppError("User not found!", 404);
   }
-  
+
   isAdm ? (user.isAdm = isAdm) : user.isAdm;
   name ? (user.name = name) : user.name;
   email ? (user.email = email) : user.email;

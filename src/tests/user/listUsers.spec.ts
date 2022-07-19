@@ -5,7 +5,7 @@ import app from "../../app";
 import request from "supertest";
 
 describe("Testing GET /users", () => {
-  let connection: DataSource
+  let connection: DataSource;
 
   interface User {
     name: string;
@@ -19,7 +19,6 @@ describe("Testing GET /users", () => {
     password?: string;
   }
 
-
   let testUser: User = {
     name: "miguel",
     email: "testemiguel@hotmail.com",
@@ -30,7 +29,7 @@ describe("Testing GET /users", () => {
   let loginUser: UserLogin = {
     email: "testemiguel@hotmail.com",
     password: "123456Ab!",
-  }
+  };
 
   beforeAll(async () => {
     await AppDataSource.initialize()
@@ -39,8 +38,7 @@ describe("Testing GET /users", () => {
         console.error("Error during Data Source initialization", err);
       });
 
-      await request(app).post("/users").send(testUser);
-
+    await request(app).post("/users").send(testUser);
   });
 
   afterAll(async () => {
@@ -48,25 +46,26 @@ describe("Testing GET /users", () => {
   });
 
   test("Should be able to list all users", async () => {
-      const responseToken = await request(app).post("/login").send(loginUser);
-      const {token} = responseToken.body
-      const response = await request(app).get("/users").set("Authorization", `Bearer ${token}`);
+    const responseToken = await request(app).post("/login").send(loginUser);
+    const { token } = responseToken.body;
+    const response = await request(app)
+      .get("/users")
+      .set("Authorization", `Bearer ${token}`);
 
-      delete testUser.password //password deletada porque a requisição dos usuarios não contem password 
+    delete testUser.password; //password deletada porque a requisição dos usuarios não contem password
 
     expect(response.status).toEqual(200);
     expect(response.body.length).toEqual(1);
     expect(Array.isArray(response.body)).toBe(true);
-     expect(response.body).toEqual(
+    expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-            ...testUser,
-            id: response.body[0].id,
-            created_at: response.body[0].created_at,
-            updated_at: response.body[0].updated_at,
-          }),
+          ...testUser,
+          id: response.body[0].id,
+          created_at: response.body[0].created_at,
+          updated_at: response.body[0].updated_at,
+        }),
       ])
     );
   });
-
 });

@@ -27,11 +27,11 @@ const userLoginService = ({ email, password, }) => __awaiter(void 0, void 0, voi
         },
     });
     if (!user) {
-        throw new app_error_1.default("Invalid permission", 403);
+        throw new app_error_1.default("Wrong email/password", 403);
     }
     const comparePassword = yield (0, bcryptjs_1.compare)(password, user.password);
     if (!comparePassword) {
-        throw new app_error_1.default("Email or password incorrect", 403);
+        throw new app_error_1.default("Wrong email/password", 403);
     }
     const token = jsonwebtoken_1.default.sign({
         id: user.id,

@@ -17,7 +17,6 @@ const bcryptjs_1 = require("bcryptjs");
 const data_source_1 = require("../../data-source");
 const app_error_1 = __importDefault(require("../../errors/app-error"));
 const userCreateService = ({ isAdm, email, name, password, }) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(password);
     const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
     const checkUserExists = yield userRepository.findOne({
         where: {
@@ -35,6 +34,14 @@ const userCreateService = ({ isAdm, email, name, password, }) => __awaiter(void 
         password: hashedPassword,
     });
     yield userRepository.save(user);
-    return user;
+    const newUser = {
+        id: user.id,
+        isAdm: user.isAdm,
+        name: user.name,
+        email: user.email,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+    };
+    return newUser;
 });
 exports.default = userCreateService;

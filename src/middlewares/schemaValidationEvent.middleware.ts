@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express"
-import { IEventRequest } from "../interfaces/events/index"
-import * as yup from "yup"
-import { SchemaOf } from "yup"
+import { Request, Response, NextFunction } from "express";
+import { IEventRequest } from "../interfaces/event/index";
+import * as yup from "yup";
+import { SchemaOf } from "yup";
 
 export const handleEventError: SchemaOf<IEventRequest> = yup.object().shape({
   name: yup.string().required(),
   description: yup.string().required(),
   date: yup.date().required(),
-  user: yup.string()
+  user: yup.string(),
 });
 
 export const validateEventCreate =
@@ -22,7 +22,7 @@ export const validateEventCreate =
           stripUnknown: true,
         });
 
-        req.newEvent = validatedData
+        req.newEvent = validatedData;
 
         next();
       } catch (err: any) {
@@ -32,6 +32,6 @@ export const validateEventCreate =
         });
       }
     } catch (err) {
-      next(err)
+      next(err);
     }
-  }
+  };

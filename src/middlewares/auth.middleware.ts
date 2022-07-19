@@ -10,9 +10,7 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     throw new AppError("No token found", 404);
   }
 
-
   const splitToken = token.split(" ");
-
 
   jwt.verify(
     splitToken[1],

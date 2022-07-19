@@ -2,7 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/User";
 import AppError from "../../errors/app-error";
 
-const userDeleteService = async (id: string) => {
+const userDeleteService = async (id: string): Promise<void> => {
   const userRepository = AppDataSource.getRepository(User);
 
   const user = await userRepository.find();

@@ -38,7 +38,7 @@ exports.handleEventError = yup.object().shape({
     name: yup.string().required(),
     description: yup.string().required(),
     date: yup.date().required(),
-    user: yup.string()
+    user: yup.string(),
 });
 const validateEventCreate = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

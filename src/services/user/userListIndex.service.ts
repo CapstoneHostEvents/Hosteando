@@ -1,13 +1,14 @@
 import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/User";
 import AppError from "../../errors/app-error";
+import { IUser } from "../../interfaces/user";
 
-const userListIndexService = async (id: string) => {
+const userListIndexService = async (id: string): Promise<IUser> => {
   const userRepository = AppDataSource.getRepository(User);
 
   const user = await userRepository.find({
     select: {
-      id:true,
+      id: true,
       name: true,
       isAdm: true,
       email: true,

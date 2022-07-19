@@ -17,7 +17,16 @@ const User_1 = require("../../entities/User");
 const app_error_1 = __importDefault(require("../../errors/app-error"));
 const userListIndexService = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepository = data_source_1.AppDataSource.getRepository(User_1.User);
-    const user = yield userRepository.find();
+    const user = yield userRepository.find({
+        select: {
+            id: true,
+            name: true,
+            isAdm: true,
+            email: true,
+            created_at: true,
+            updated_at: true,
+        },
+    });
     const users = user.find((userId) => userId.id === id);
     if (!users) {
         throw new app_error_1.default("User not found!", 404);
