@@ -29,7 +29,9 @@ export class CreateEventController {
     const id = req.params.id
     const user = req.user.id
     const newEvent = await UpdateEventService({name, description, date, id, user})
-    return res.status(201).json(newEvent)
+
+    return res.status(200).json(newEvent)
+
   }
   
   static async delete (req: Request, res: Response) {

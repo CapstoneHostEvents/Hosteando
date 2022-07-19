@@ -14,6 +14,8 @@ export const errorHandler = (
       message: err.message,
     });
   }
+  console.log(err)
+
 
   console.log(err);
 
