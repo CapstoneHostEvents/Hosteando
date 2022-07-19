@@ -20,9 +20,7 @@ const userUpdateService = async ({
   if (!users) {
     throw new AppError("User not found!", 404);
   }
-   //console.log(` ${user.id}`);
-   //console.log(` ${id}`);
-
+   
   if (user?.id !== id) {
     throw new AppError("Has to be the same user", 403);
   }
