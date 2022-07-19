@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../data-source";
-import { IZoneCreate, IZoneRequest } from "../../interfaces/zones";
+import { IZoneCreate, IZoneRequest } from "../../interfaces/zone";
 import { Zone } from "../../entities/Zone";
 import { Event } from "../../entities/Event";
 import AppError from "../../errors/app-error";

@@ -5,7 +5,7 @@ import app from "../../app";
 import request from "supertest";
 
 describe("Testing POST /login", () => {
-  let connection: DataSource
+  let connection: DataSource;
 
   interface User {
     name: string;
@@ -19,7 +19,6 @@ describe("Testing POST /login", () => {
     password?: string;
   }
 
-
   let testUser: User = {
     name: "miguel",
     email: "testemiguel@hotmail.com",
@@ -30,7 +29,7 @@ describe("Testing POST /login", () => {
   let loginUser: UserLogin = {
     email: "testemiguel@hotmail.com",
     password: "123456Ab!",
-  }
+  };
 
   beforeAll(async () => {
     await AppDataSource.initialize()
@@ -39,8 +38,7 @@ describe("Testing POST /login", () => {
         console.error("Error during Data Source initialization", err);
       });
 
-      await request(app).post("/users").send(testUser);
-
+    await request(app).post("/users").send(testUser);
   });
 
   afterAll(async () => {
@@ -55,14 +53,12 @@ describe("Testing POST /login", () => {
     expect(typeof response.body.token).toBe("string");
   });
 
-  test ("Testing invalid login", async () => {
+  test("Testing invalid login", async () => {
     loginUser.password = "123";
     const response = await request(app).post("/login").send(loginUser);
-    
 
     expect(response.status).toBe(403);
     expect(response.body).toHaveProperty("message", "Wrong email/password");
     loginUser.password = "123456";
   });
-
 });

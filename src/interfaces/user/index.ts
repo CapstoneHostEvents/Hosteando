@@ -11,6 +11,7 @@ export interface IUser {
   isAdm: boolean;
   created_at: Date;
   updated_at: Date;
+  user?:string;
 }
 export interface IUserLogin {
   email: string;
@@ -22,11 +23,9 @@ export interface IUserUp {
   email: string;
   isAdm: boolean;
   password: string;
-  user?: any;
+  user?: string;
 }
-export interface IUserReq extends IUserUp {
-  id?: any;
-}
+
 export interface IEmailRequest {
   to: string;
   subject: string;

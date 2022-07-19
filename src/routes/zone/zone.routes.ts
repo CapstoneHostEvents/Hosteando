@@ -1,5 +1,5 @@
 import Router from "express";
-import ZoneController from "../../controllers/Zones/zone.controller";
+import ZoneController from "../../controllers/zone/zone.controller";
 import authMiddleware from "../../middlewares/auth.middleware";
 import isAdmUserMiddleware from "../../middlewares/isAdmUser.middleware";
 import validateZoneCreate, {
@@ -7,7 +7,6 @@ import validateZoneCreate, {
 } from "../../middlewares/schemaValidationZone.middleware";
 
 const zoneRoutes = Router();
-
 const zoneController = new ZoneController();
 
 zoneRoutes.post(
