@@ -209,7 +209,7 @@ describe("Create a Event", () => {
 
   it("Trying to update an event that doesn't exist", async () => {
     const response = await request(app)
-      .patch(`s/${invalidId}`)
+      .patch(`/events/${invalidId}`)
       .send(eventCorrect)
       .set("Authorization", `Bearer ${tokenAdm}`);
 
