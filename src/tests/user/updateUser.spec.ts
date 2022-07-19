@@ -1,4 +1,6 @@
+
 import { AppDataSource } from "../../data-source";
+
 import { DataSource } from "typeorm";
 import app from "../../app";
 import request from "supertest";
@@ -43,6 +45,7 @@ describe("Test for PATCH method at /users/:id", () => {
   afterAll(async () => {
     await connection.destroy();
   });
+ 
 
   test("Trying to update an user", async () => {
     const responsePatch = await request(app)

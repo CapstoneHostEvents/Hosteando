@@ -2,7 +2,7 @@ import { AppDataSource } from "../../data-source";
 import { User } from "../../entities/User";
 import AppError from "../../errors/app-error";
 import * as bcrypt from "bcryptjs";
-import { IUserUp } from "../../interfaces/user";
+import { IUserReq, IUserUp } from "../../interfaces/user";
 
 const userUpdateService = async ({
   id,
@@ -10,17 +10,25 @@ const userUpdateService = async ({
   name,
   email,
   password,
-}: IUserUp) => {
+  user
+}: IUserUp) : Promise<IUserReq>=> {
   const userRepository = AppDataSource.getRepository(User);
 
-  const user = await userRepository.findOne({
+  const users = await userRepository.findOne({
     where: { id },
   });
-  if (!user) {
+  if (!users) {
     throw new AppError("User not found!", 404);
   }
+   //console.log(` ${user.id}`);
+   //console.log(` ${id}`);
+
+  if (user?.id !== id) {
+    throw new AppError("Has to be the same user", 403);
+  }
   
-  isAdm ? (user.isAdm = isAdm) : user.isAdm;
+  if (isAdm) throw new AppError("Cannot change isAdm for an User", 403);
+
   name ? (user.name = name) : user.name;
   email ? (user.email = email) : user.email;
   password ? (user.password = await bcrypt.hash(password, 10)) : user.password;

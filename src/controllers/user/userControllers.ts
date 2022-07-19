@@ -35,6 +35,7 @@ export default class UserController {
   //Atualizar User
   async update(req: Request, res: Response) {
     const id = req.params.id;
+    const user = req.user.id;
     const { isAdm, name, email, password } = req.body;
 
     const updateUser = await userUpdateService({
@@ -43,14 +44,16 @@ export default class UserController {
       email,
       password,
       id,
+      user
     });
     return res.status(200).json({ message: "User updated!" });
   }
   //Deletando User
   async delete(req: Request, res: Response) {
     const id = req.params.id;
-
-    const deleteUser = await userDeleteService(id);
+    const user = req.user.id;
+    
+    const deleteUser = await userDeleteService(id, user);
     return res.status(200).json({ message: "User deleted!" });
   }
   //Login

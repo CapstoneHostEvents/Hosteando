@@ -17,13 +17,16 @@ export interface IUserLogin {
   password: string;
 }
 export interface IUserUp {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   isAdm: boolean;
   password: string;
+  user?: any;
 }
-
+export interface IUserReq extends IUserUp {
+  id?: any;
+}
 export interface IEmailRequest {
   to: string;
   subject: string;

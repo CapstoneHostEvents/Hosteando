@@ -5,9 +5,6 @@ import { IEventUpdate, IEventUpdateResponse } from "../../interfaces/events"
 
 export const UpdateEventService = async ({name, description, date, id, user } : IEventUpdate) : Promise<IEventUpdateResponse> => {
   
-  // console.log(`userId ${user}`)
-  // console.log(`EventId ${id}`)
-  
   if (id.length !== 36) {
     throw new AppError("Wrong event id", 404)
   }
