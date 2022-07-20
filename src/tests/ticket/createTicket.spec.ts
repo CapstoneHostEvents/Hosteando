@@ -182,7 +182,7 @@ describe("Create ticket", () => {
       .send(ticket)
       .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
     expect(response.body.status).toBe("error");
     expect(response.body).toHaveProperty("message");
     expect(response.body.message).toBe("User not found");
@@ -199,7 +199,7 @@ describe("Create ticket", () => {
       .send(ticket)
       .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
     expect(response.body.status).toBe("error");
     expect(response.body).toHaveProperty("message");
     expect(response.body.message).toBe("Zone not found");
