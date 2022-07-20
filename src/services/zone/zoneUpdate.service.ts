@@ -9,6 +9,7 @@ const zoneUpdateService = async ({
   total_tickets,
   eventId,
   zoneId,
+  userId,
 }: IZoneUpdate): Promise<Zone> => {
   const zoneRepository = AppDataSource.getRepository(Zone);
 
@@ -24,6 +25,9 @@ const zoneUpdateService = async ({
 
   if (zone.ticket.length > total_tickets)
     throw new AppError("More tickets issued than new total tickets", 403);
+
+  if (zone.event.user.id !== userId)
+    throw new AppError("No permission allowed", 403);
 
   const updatedZone = {
     ...zone,

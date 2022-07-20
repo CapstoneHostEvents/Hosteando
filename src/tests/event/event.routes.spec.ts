@@ -190,12 +190,7 @@ describe("Create a Event", () => {
       .set("Authorization", `Bearer ${tokenAdm}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("name");
-    expect(response.body).toHaveProperty("description");
-    expect(response.body).toHaveProperty("date");
-    expect(response.body).toHaveProperty("created_at");
-    expect(response.body).toHaveProperty("user");
+    expect(response.body).toHaveProperty("message", "Event updated!");
   });
 
   it("Trying to update an event with different user from event creator", async () => {
@@ -219,6 +214,15 @@ describe("Create a Event", () => {
   });
 
   // 5 - DELETE AN EVENT
+  
+  it("Trying to delete an event with different user from event creator", async () => {
+    const response = await request(app)
+      .delete(`/events/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm2}`);
+  
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "No permission allowed");
+  });
 
   it("Trying to delete an event", async () => {
     const response = await request(app)
@@ -229,21 +233,12 @@ describe("Create a Event", () => {
     expect(response.body).toHaveProperty("message", "Event deleted!");
   });
 
-  it("Trying to delete an event with different user from event creator", async () => {
-    const response = await request(app)
-      .delete(`/events/${eventId}`)
-      .set("Authorization", `Bearer ${tokenAdm2}`);
-
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("message", "No permission allowed");
-  });
-
   it("Trying to delete an event that doesn't exist", async () => {
     const response = await request(app)
       .delete(`/events/${eventId}`)
-      .set("Authorization", `Bearer ${tokenAdm2}`);
+      .set("Authorization", `Bearer ${tokenAdm}`);
 
     expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("message", "No permission allowed");
+    expect(response.body).toHaveProperty("message", "Event not found");
   });
 });
