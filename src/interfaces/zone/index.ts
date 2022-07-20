@@ -13,6 +13,11 @@ export interface IZoneCreate {
   userId: string;
 }
 
-export interface IZoneUpdate extends IZoneRequest {
+export interface IZoneUpdate extends IZoneCreate {
   zoneId: string;
+}
+
+export interface IZoneDelete {
+  zoneId: string;
+  userId: string;
 }
