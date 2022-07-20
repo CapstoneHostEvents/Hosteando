@@ -550,7 +550,6 @@ Content-type: application/json
 ```
 GET /events
 Host: https://hosteando.herokuapp.com
-Authorization
 Content-type: application/json
 ```
 
@@ -678,11 +677,7 @@ Content-type: application/json
 
 ```json
 {
-  "id": "9c251ec9-ece0-4ejnf2c-c9001ef1ewwfe93",
-  "name": "Rock in Rio",
-  "description": "Festival de música e entretenimento",
-  "date": "2022-12-12 18:00:23",
-  "created_at": "2022-07-12 12:48:23"
+  "message": "Event updated!"
 }
 ```
 
@@ -962,7 +957,7 @@ Empty
 
 ---
 
-### 4.3.4. **Update event**
+### 4.3.4. **Update zone**
 
 [ Back to endpoints ](#4-endpoints)
 
@@ -1097,6 +1092,7 @@ The Ticket object is defined as:
 ```
 POST /tickets
 Host: https://hosteando.herokuapp.com
+Authorization
 Content-type: application/json
 ```
 
@@ -1199,7 +1195,7 @@ None, the maximum that can return an empty list.
 ### Example of request:
 
 ```
-GET /tickets
+GET /tickets/<user_id>
 Host: https://hosteando.herokuapp.com
 Authorization
 Content-type: application/json
