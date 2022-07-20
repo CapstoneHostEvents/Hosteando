@@ -7,7 +7,7 @@ const ticketController = new TicketController();
 
 ticketRouter.post("", authMiddleware, ticketController.store);
 ticketRouter.get("", authMiddleware, ticketController.index);
-ticketRouter.get("/:id", ticketController.show);
-ticketRouter.delete("/:id", ticketController.delete);
+ticketRouter.get("/:id", authMiddleware, ticketController.show);
+ticketRouter.delete("/:id", authMiddleware, ticketController.delete);
 
 export default ticketRouter;

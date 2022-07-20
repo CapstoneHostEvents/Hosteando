@@ -105,107 +105,109 @@ describe("Create ticket", () => {
       .delete(`/tickets/${response.body.id}`)
       .set("Authorization", `Bearer ${token1}`);
 
+    console.log(response.body)
+
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("message");
     expect(response.body.message).toBe("Ticket deleted");
 
   });
 
-  test("Should be able to delete multiple tickets from multiples users", async () => {
-    let response;
+  // test("Should be able to delete multiple tickets from multiples users", async () => {
+  //   let response;
     
-    const ticket: ITicketRequest = {
-      userId: userData.id,
-      zoneId: zoneData.id,
-    };
+  //   const ticket: ITicketRequest = {
+  //     userId: userData.id,
+  //     zoneId: zoneData.id,
+  //   };
 
-    const ticket2: ITicketRequest = {
-      userId: userData2.id,
-      zoneId: zoneData.id,
-    };
+  //   const ticket2: ITicketRequest = {
+  //     userId: userData2.id,
+  //     zoneId: zoneData.id,
+  //   };
 
-    const ticketData1 = await request(app)
-      .post("/tickets")
-      .send(ticket)
-      .set("Authorization", `Bearer ${token1}`);
+  //   const ticketData1 = await request(app)
+  //     .post("/tickets")
+  //     .send(ticket)
+  //     .set("Authorization", `Bearer ${token1}`);
 
-    expect(ticketData1.status).toBe(201);
+  //   expect(ticketData1.status).toBe(201);
 
-    const ticketData2 = await request(app)
-      .post("/tickets")
-      .send(ticket2)
-      .set("Authorization", `Bearer ${token2}`);
+  //   const ticketData2 = await request(app)
+  //     .post("/tickets")
+  //     .send(ticket2)
+  //     .set("Authorization", `Bearer ${token2}`);
 
-    expect(ticketData2.status).toBe(201);
+  //   expect(ticketData2.status).toBe(201);
 
-    response = await request(app)
-      .delete(`/tickets/${ticketData1.body.id}`)
-      .set("Authorization", `Bearer ${token1}`);
+  //   response = await request(app)
+  //     .delete(`/tickets/${ticketData1.body.id}`)
+  //     .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe("Ticket deleted");
+  //   expect(response.status).toBe(200);
+  //   expect(response.body).toHaveProperty("message");
+  //   expect(response.body.message).toBe("Ticket deleted");
 
-    response = await request(app)
-      .delete(`/tickets/${ticketData2.body.id}`)
-      .set("Authorization", `Bearer ${token2}`);
+  //   response = await request(app)
+  //     .delete(`/tickets/${ticketData2.body.id}`)
+  //     .set("Authorization", `Bearer ${token2}`);
 
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe("Ticket deleted");
+  //   expect(response.status).toBe(200);
+  //   expect(response.body).toHaveProperty("message");
+  //   expect(response.body.message).toBe("Ticket deleted");
 
-  });
+  // });
 
-  test("Should be able to create more tickets after deleting some", async () => {
-    let response;
+  // test("Should be able to create more tickets after deleting some", async () => {
+  //   let response;
     
-    const ticket: ITicketRequest = {
-      userId: userData.id,
-      zoneId: zoneData.id,
-    };
+  //   const ticket: ITicketRequest = {
+  //     userId: userData.id,
+  //     zoneId: zoneData.id,
+  //   };
 
-    const ticket2: ITicketRequest = {
-      userId: userData2.id,
-      zoneId: zoneData.id,
-    };
+  //   const ticket2: ITicketRequest = {
+  //     userId: userData2.id,
+  //     zoneId: zoneData.id,
+  //   };
 
-    response = await request(app)
-      .post("/tickets")
-      .send(ticket)
-      .set("Authorization", `Bearer ${token1}`);
+  //   response = await request(app)
+  //     .post("/tickets")
+  //     .send(ticket)
+  //     .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(201);
+  //   expect(response.status).toBe(201);
 
-    response = await request(app)
-      .post("/tickets")
-      .send(ticket2)
-      .set("Authorization", `Bearer ${token2}`);
+  //   response = await request(app)
+  //     .post("/tickets")
+  //     .send(ticket2)
+  //     .set("Authorization", `Bearer ${token2}`);
 
-    expect(response.status).toBe(201);
+  //   expect(response.status).toBe(201);
 
-    response = await request(app)
-      .post("/tickets")
-      .send(ticket2)
-      .set("Authorization", `Bearer ${token2}`);
+  //   response = await request(app)
+  //     .post("/tickets")
+  //     .send(ticket2)
+  //     .set("Authorization", `Bearer ${token2}`);
 
-    expect(response.status).toBe(201);
+  //   expect(response.status).toBe(201);
 
-    response = await request(app)
-      .post("/tickets")
-      .send(ticket)
-      .set("Authorization", `Bearer ${token1}`);
+  //   response = await request(app)
+  //     .post("/tickets")
+  //     .send(ticket)
+  //     .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(201);
-  });
+  //   expect(response.status).toBe(201);
+  // });
 
-  test("Send an error message if ticket wasn't found", async () => {
-    const response = await request(app)
-      .delete(`/tickets/${userData.id}`)
-      .set("Authorization", `Bearer ${token1}`);
+  // test("Send an error message if ticket wasn't found", async () => {
+  //   const response = await request(app)
+  //     .delete(`/tickets/${userData.id}`)
+  //     .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(404);
-    expect(response.body.status).toBe("error");
-    expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe("Ticket not found");
-  });
+  //   expect(response.status).toBe(404);
+  //   expect(response.body.status).toBe("error");
+  //   expect(response.body).toHaveProperty("message");
+  //   expect(response.body.message).toBe("Ticket not found");
+  // });
 });

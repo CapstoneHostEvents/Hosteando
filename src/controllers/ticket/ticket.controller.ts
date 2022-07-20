@@ -31,8 +31,9 @@ export default class TicketController {
 
   //Delete ticket
   async delete(req: Request, res: Response) {
+    const userId_fromToken = req.user.id;
     const { id } = req.params;
-    await ticketDeleteService(id);
+    await ticketDeleteService(id, userId_fromToken);
 
     return res.status(200).json( {message: "Ticket deleted" });
   }
