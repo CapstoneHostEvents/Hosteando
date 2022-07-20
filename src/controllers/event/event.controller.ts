@@ -33,7 +33,7 @@ export default class EventController {
     const { name, description, date } = req.body;
     const id = req.params.id;
     const user = req.user.id;
-    const newEvent = await updateEventService({
+    await updateEventService({
       name,
       description,
       date,
@@ -41,7 +41,7 @@ export default class EventController {
       user,
     });
 
-    return res.status(200).json(newEvent);
+    return res.status(200).json({ message: "Event updated!" });
   }
 
   async delete(req: Request, res: Response) {
