@@ -19,6 +19,8 @@ describe("Create ticket", () => {
   let token1: any;
   let token2: any;
 
+  let ticketData: any;
+
   let zoneData: any;
 
   beforeAll(async () => {
@@ -88,35 +90,86 @@ describe("Create ticket", () => {
     await connection.destroy();
   });
 
-  test("Should be able to create an ticket", async () => {
+  test("Should be able to delete an ticket", async () => {
     const ticket: ITicketRequest = {
       userId: userData.id,
       zoneId: zoneData.id,
     };
 
-    const response = await request(app)
+    let response = await request(app)
       .post("/tickets")
       .send(ticket)
       .set("Authorization", `Bearer ${token1}`);
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("userId");
-    expect(response.body).toHaveProperty("zoneId");
-    expect(response.body).toHaveProperty("created_at");
+
+    response = await request(app)
+      .delete(`/tickets/${response.body.id}`)
+      .set("Authorization", `Bearer ${token1}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("message");
+    expect(response.body.message).toBe("Ticket deleted");
+
   });
 
-  test("Should be able to create various tickets from different users", async () => {
+  test("Should be able to delete multiple tickets from multiples users", async () => {
+    let response;
+    
     const ticket: ITicketRequest = {
       userId: userData.id,
       zoneId: zoneData.id,
     };
+
     const ticket2: ITicketRequest = {
       userId: userData2.id,
       zoneId: zoneData.id,
     };
 
-    let response: request.Response;
+    const ticketData1 = await request(app)
+      .post("/tickets")
+      .send(ticket)
+      .set("Authorization", `Bearer ${token1}`);
+
+    expect(ticketData1.status).toBe(201);
+
+    const ticketData2 = await request(app)
+      .post("/tickets")
+      .send(ticket2)
+      .set("Authorization", `Bearer ${token2}`);
+
+    expect(ticketData2.status).toBe(201);
+
+    response = await request(app)
+      .delete(`/tickets/${ticketData1.body.id}`)
+      .set("Authorization", `Bearer ${token1}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("message");
+    expect(response.body.message).toBe("Ticket deleted");
+
+    response = await request(app)
+      .delete(`/tickets/${ticketData2.body.id}`)
+      .set("Authorization", `Bearer ${token2}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("message");
+    expect(response.body.message).toBe("Ticket deleted");
+
+  });
+
+  test("Should be able to create more tickets after deleting some", async () => {
+    let response;
+    
+    const ticket: ITicketRequest = {
+      userId: userData.id,
+      zoneId: zoneData.id,
+    };
+
+    const ticket2: ITicketRequest = {
+      userId: userData2.id,
+      zoneId: zoneData.id,
+    };
 
     response = await request(app)
       .post("/tickets")
@@ -124,10 +177,6 @@ describe("Create ticket", () => {
       .set("Authorization", `Bearer ${token1}`);
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("userId");
-    expect(response.body).toHaveProperty("zoneId");
-    expect(response.body).toHaveProperty("created_at");
 
     response = await request(app)
       .post("/tickets")
@@ -135,10 +184,15 @@ describe("Create ticket", () => {
       .set("Authorization", `Bearer ${token2}`);
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("userId");
-    expect(response.body).toHaveProperty("zoneId");
-    expect(response.body).toHaveProperty("created_at");
+
+    response = await request(app)
+      .post("/tickets")
+      .send(ticket2)
+      .set("Authorization", `Bearer ${token2}`);
+
+    expect(response.status).toBe(201);
+
+    ticketData = response.body;
 
     response = await request(app)
       .post("/tickets")
@@ -146,62 +200,31 @@ describe("Create ticket", () => {
       .set("Authorization", `Bearer ${token1}`);
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("userId");
-    expect(response.body).toHaveProperty("zoneId");
-    expect(response.body).toHaveProperty("created_at");
   });
 
-  test("Don't allow creating more tickets than the zone total", async () => {
-    const ticket: ITicketRequest = {
-      userId: userData.id,
-      zoneId: zoneData.id,
-    };
-
+  test("Send an error message if ticket wasn't found", async () => {
     const response = await request(app)
-      .post("/tickets")
-      .send(ticket)
-      .set("Authorization", `Bearer ${token1}`);
-
-    expect(response.status).toBe(409);
-    expect(response.body.status).toBe("error");
-    expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe(
-      "All tickets from this zone were already created"
-    );
-  });
-
-  test("Send an error message if user was not found", async () => {
-    const ticket: ITicketRequest = {
-      userId: zoneData.id,
-      zoneId: zoneData.id,
-    };
-
-    const response = await request(app)
-      .post("/tickets")
-      .send(ticket)
+      .delete(`/tickets/${userData.id}`)
       .set("Authorization", `Bearer ${token1}`);
 
     expect(response.status).toBe(404);
     expect(response.body.status).toBe("error");
     expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe("User not found");
+    expect(response.body.message).toBe("Ticket not found");
   });
 
-  test("Send an error message if zone was not found", async () => {
-    const ticket: ITicketRequest = {
-      userId: userData.id,
-      zoneId: userData.id,
-    };
+  test("Send an error message if another user tries to delete the ticket", async () => {
+
 
     const response = await request(app)
-      .post("/tickets")
-      .send(ticket)
+      .delete(`/tickets/${ticketData.id}`)
       .set("Authorization", `Bearer ${token1}`);
 
-    expect(response.status).toBe(404);
+    expect(response.status).toBe(403);
     expect(response.body.status).toBe("error");
     expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe("Zone not found");
+    expect(response.body.message).toBe("Only the owner of ticket can delete it");
   });
+
+
 });

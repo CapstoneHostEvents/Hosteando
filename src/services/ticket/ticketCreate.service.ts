@@ -15,12 +15,12 @@ const ticketCreateService = async ({
 
   const user = await userRepository.findOneBy({ id: userId });
   if (!user) {
-    throw new AppError("User not found", 400);
+    throw new AppError("User not found", 404);
   }
 
   const zone = await zoneRepository.findOneBy({ id: zoneId });
   if (!zone) {
-    throw new AppError("Zone not found", 400);
+    throw new AppError("Zone not found", 404);
   }
 
   const tickets = await ticketRepository

@@ -100,10 +100,10 @@ yarn typeorm migration:run -d src/data-source.ts
   - [PATCH - /zones](#435-update-zone)
   - [DELETE - /zones](#436-delete-zone)
 - [Ticket](#44-ticket)
-  - [POST - /ticket](#441-buy-ticket)
+  - [POST - /ticket](#441-create-ticket)
   - [GET - /ticket](#442-list-all-tickets)
-  - [GET - /ticket/me](#443-list-all-user-tickets)
-  - [DELETE - /ticket](#444-delete-ticket)
+  - [GET - /ticket/<user_id>](#443-list-all-tickets-from-user)
+  - [DELETE - /ticket/<ticket_id>](#444-delete-ticket)
 
 ---
 
@@ -894,22 +894,22 @@ The Ticket object is defined as:
 | Field      | Type   | Description                |
 | ---------- | ------ | -------------------------- |
 | id         | string | Ticket's unique identifier |
-| zoneId     | string | Relationship with zone id  |
 | userId     | number | Relationship with user id  |
+| zoneId     | string | Relationship with zone id  |
 | created_at | number | Event creation date        |
 
 ## Endpoints
 
-| Method | Endpoint | Responsability            |
-| ------ | -------- | ------------------------- |
-| POST   | /tickets | Buy an ticket             |
-| GET    | /tickets | List all tickets          |
-| GET    | /tickets | List all the user tickets |
-| DELETE | /tickets | Delete ticket             |
+| Method | Endpoint             | Responsability             |
+| ------ | -------------------- | -------------------------- |
+| POST   | /tickets             | Create an ticket           |
+| GET    | /tickets             | List all tickets           |
+| GET    | /tickets/<user_id>   | List all tickets from user |
+| DELETE | /tickets/<ticket_id> | Delete ticket              |
 
 ---
 
-### 4.4.1. **Buy ticket**
+### 4.4.1. **Create ticket**
 
 [ Back to endpoints ](#4-endpoints)
 
@@ -941,17 +941,19 @@ Content-type: application/json
 ```json
 {
   "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
-  "created_at": "2022-07-15T14:06:45.088Z",
   "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
-  "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c"
+  "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
+  "created_at": "2022-07-15T14:06:45.088Z"
 }
 ```
 
 ### Possible errors:
 
-| Error code      | Description                                     |
-| --------------- | ----------------------------------------------- |
-| 409 bad request | All tickets from this zone were already created |
+| Error code    | Description                                     |
+| --------------| ----------------------------------------------- |
+| 409 conflict  | All tickets from this zone were already created |
+| 404 not found | user not found                                  |
+| 409 not found | zone not found                                  |
 
 ---
 
@@ -986,6 +988,64 @@ Empty
 [
   {
     "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
+    "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+    "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
+    "created_at": "2022-07-15T14:06:45.088Z"
+  },
+  {
+    "id": "a86c7413-7d53-49c5-89e9-23eeb484deae",
+    "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+    "zoneId": "f532e228-810b-431d-90b3-a42ff242f1bc",
+    "created_at": "2022-07-15T13:54:08.661Z"
+  },
+  {
+    "id": "d7ef5881-932b-4f81-9b79-acc36df47b1e",
+    "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+    "zoneId": "f532e228-810b-431d-90b3-a42ff242f1bc",
+    "created_at": "2022-07-15T14:01:59.497Z"
+  }
+]
+```
+
+### Possible errors:
+
+None, the maximum that can return an empty list.
+
+---
+
+### 4.4.3. **List all tickets from user**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/tickets/<user_id>`
+
+### Example of request:
+
+```
+GET /tickets
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+[
+  {
+    "id": "b49ad6af-66f0-4d33-a68b-9c2729897d86",
+    "userId": "d124c708-9654-4216-96d7-1b8bd8b424d5",
+    "zoneId": "5f16462e-b084-4484-8ebf-2ec6247bee1c",
     "created_at": "2022-07-15T14:06:45.088Z"
   }
 ]
@@ -994,5 +1054,47 @@ Empty
 ### Possible errors:
 
 None, the maximum that can return an empty list.
+
+---
+
+### 4.4.4. **Delete ticket**
+
+[ Back to endpoints ](#4-endpoints)
+
+### `/tickets/<ticket_id>`
+
+### Example of request:
+
+```
+DELETE /tickets/<ticket_id>
+Host: https://hosteando.herokuapp.com
+Authorization
+Content-type: application/json
+```
+
+### Request body:
+
+```json
+Empty
+```
+
+### Example of response:
+
+```
+200 OK
+```
+
+```json
+{
+  "message": "Ticket deleted"
+}
+```
+
+### Possible errors:
+
+| Error code    | Description                  |
+| ------------- | -----------------------------|
+| 404 not found | The ticket was not found     |
+| 403 forbidden | Only owner can delete ticket |
 
 ---
