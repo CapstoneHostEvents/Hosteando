@@ -1,7 +1,7 @@
 import { AppDataSource } from "../../data-source";
 import { Event } from "../../entities/Event";
 import AppError from "../../errors/app-error";
-import { IEventUpdate, IEventUpdateResponse } from "../../interfaces/event";
+import { IEventUpdate } from "../../interfaces/event";
 
 const updateEventService = async ({
   name,
