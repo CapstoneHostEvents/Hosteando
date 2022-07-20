@@ -1092,8 +1092,9 @@ Empty
 
 ### Possible errors:
 
-| Error code    | Description              |
-| ------------- | ------------------------ |
-| 404 not found | The ticket was not found |
+| Error code    | Description                  |
+| ------------- | -----------------------------|
+| 404 not found | The ticket was not found     |
+| 403 forbidden | Only owner can delete ticket |
 
 ---
