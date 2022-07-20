@@ -190,7 +190,7 @@ describe("Create a Event", () => {
       .set("Authorization", `Bearer ${tokenAdm}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("Event updated!");
+    expect(response.body).toHaveProperty("message", "Event updated!");
   });
 
   it("Trying to update an event with different user from event creator", async () => {
