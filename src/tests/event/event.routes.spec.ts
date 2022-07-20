@@ -219,6 +219,15 @@ describe("Create a Event", () => {
   });
 
   // 5 - DELETE AN EVENT
+  
+  it("Trying to delete an event with different user from event creator", async () => {
+    const response = await request(app)
+      .delete(`/events/${eventId}`)
+      .set("Authorization", `Bearer ${tokenAdm2}`);
+  
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", "No permission allowed");
+  });
 
   it("Trying to delete an event", async () => {
     const response = await request(app)
@@ -229,21 +238,12 @@ describe("Create a Event", () => {
     expect(response.body).toHaveProperty("message", "Event deleted!");
   });
 
-  it("Trying to delete an event with different user from event creator", async () => {
-    const response = await request(app)
-      .delete(`/events/${eventId}`)
-      .set("Authorization", `Bearer ${tokenAdm2}`);
-
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("message", "No permission allowed");
-  });
-
   it("Trying to delete an event that doesn't exist", async () => {
     const response = await request(app)
       .delete(`/events/${eventId}`)
-      .set("Authorization", `Bearer ${tokenAdm2}`);
+      .set("Authorization", `Bearer ${tokenAdm}`);
 
     expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("message", "No permission allowed");
+    expect(response.body).toHaveProperty("message", "Event not found");
   });
 });

@@ -16,15 +16,17 @@ const deleteEventService = async (
     id: id,
   });
 
+  console.log(event);
+  
   if (!event) {
     throw new AppError("Event not found", 404);
   }
-
+  
   if (event.user.id !== user) {
     throw new AppError("No permission allowed", 404);
   }
 
-  await eventRepository.delete(event);
+  await eventRepository.delete(event!.id);
 
   return true;
 };
