@@ -204,4 +204,19 @@ describe("Create ticket", () => {
     expect(response.body).toHaveProperty("message");
     expect(response.body.message).toBe("Zone not found");
   });
+
+  test("Send an error message if body is incorrect", async () => {
+    const ticket = {
+      user___Id: userData.id,
+      zone___Id: userData.id,
+    };
+
+    const response = await request(app)
+      .post("/tickets")
+      .send(ticket)
+      .set("Authorization", `Bearer ${token1}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty("error");
+  });
 });
