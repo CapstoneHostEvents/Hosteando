@@ -190,12 +190,7 @@ describe("Create a Event", () => {
       .set("Authorization", `Bearer ${tokenAdm}`);
 
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("name");
-    expect(response.body).toHaveProperty("description");
-    expect(response.body).toHaveProperty("date");
-    expect(response.body).toHaveProperty("created_at");
-    expect(response.body).toHaveProperty("user");
+    expect(response.body).toHaveProperty("Event updated!");
   });
 
   it("Trying to update an event with different user from event creator", async () => {
