@@ -1,4 +1,3 @@
-import { Ticket } from "../../entities/Tickets";
 import { IEventList } from "../event";
 
 export interface IZoneRequest {
@@ -16,8 +15,13 @@ export interface IZoneCreate {
   userId: string;
 }
 
-export interface IZoneUpdate extends IZoneRequest {
+export interface IZoneUpdate extends IZoneCreate {
   zoneId: string;
+}
+
+export interface IZoneDelete {
+  zoneId: string;
+  userId: string;
 }
 
 export interface IZoneList {

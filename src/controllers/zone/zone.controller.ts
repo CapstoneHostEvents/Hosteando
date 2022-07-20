@@ -43,6 +43,7 @@ export default class ZoneController {
   async update(req: Request, res: Response) {
     const zoneId = req.params.zoneId;
     const { name, price, total_tickets, eventId } = req.body;
+    const userId = req.user.id;
 
     const updateZone = await zoneUpdateService({
       name,
@@ -50,6 +51,7 @@ export default class ZoneController {
       total_tickets,
       eventId,
       zoneId,
+      userId,
     });
     return res.status(200).json({ message: "Zone updated!" });
   }
@@ -57,8 +59,9 @@ export default class ZoneController {
   //Deletando User
   async delete(req: Request, res: Response) {
     const zoneId = req.params.zoneId;
+    const userId = req.user.id;
 
-    const deleteUser = await zoneDeleteService(zoneId);
+    const deleteUser = await zoneDeleteService({ zoneId, userId });
     return res.status(200).json({ message: "Zone deleted!" });
   }
 }
