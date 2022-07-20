@@ -20,8 +20,8 @@ export const AppDataSource =
             : false,
         synchronize: false,
         logging: true,
-        entities: ["dist/src/entities/*.js"],
-        migrations: ["dist/src/migrations/*.js"],
+        entities: ["dist/entities/*.js"],
+        migrations: ["dist/migrations/*.js"],
       })
     : new DataSource({
         type: "postgres",

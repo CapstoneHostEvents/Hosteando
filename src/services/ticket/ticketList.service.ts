@@ -7,9 +7,9 @@ const ticketListService = async (): Promise<Ticket[]> => {
   const ticketList = await ticketRepository
     .createQueryBuilder()
     .select(["Ticket.id, Ticket.user.id, Ticket.zone.id, Ticket.created_at"])
-    .getRawMany()
+    .getRawMany();
 
   return ticketList;
-}
+};
 
 export default ticketListService;

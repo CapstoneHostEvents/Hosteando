@@ -88,10 +88,10 @@ yarn typeorm migration:run -d src/data-source.ts
   - [DELETE - /users](#415-delete-user)
   - [POST - /login](#416-login)
 - [Event](#42-event)
-  - [POST - /event](#421-create-event)
-  - [GET - /event](#422-list-all-events)
-  - [PATCH - /event/<event_id>](#423-update-event)
-  - [DELETE - /event/<event_id>](#424-delete-event)
+  - [POST - /events](#421-create-event)
+  - [GET - /events](#422-list-all-events)
+  - [PATCH - /events/<event_id>](#423-update-event)
+  - [DELETE - /events/<event_id>](#424-delete-event)
 - [Zone](#43-zone)
   - [POST - /zones](#431-create-zone)
   - [GET - /zones](#432-list-all-zones)
@@ -475,10 +475,10 @@ The Event object is defined as:
 
 | Method | Endpoint | Responsability  |
 | ------ | -------- | --------------- |
-| POST   | /event   | Create event    |
-| GET    | /event   | List all events |
-| PATCH  | /event   | Update event    |
-| DELETE | /event   | Delete event    |
+| POST   | /events  | Create event    |
+| GET    | /events  | List all events |
+| PATCH  | /events  | Update event    |
+| DELETE | /events  | Delete event    |
 
 ---
 
@@ -486,12 +486,12 @@ The Event object is defined as:
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/event`
+### `/events`
 
 ### Example of request:
 
 ```
-POST /event
+POST /events
 Host: https://hosteando.herokuapp.com
 Authorization
 Content-type: application/json
@@ -546,7 +546,7 @@ Content-type: application/json
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/event`
+### `/events`
 
 ### Example of request:
 
@@ -610,14 +610,14 @@ The Zone object is defined as:
 
 ## Endpoints
 
-| Method | Endpoint               | Responsability                          |
-| ------ | ---------------------- | --------------------------------------- |
-| POST   | /zone                  | Create zone                             |
-| GET    | /zone                  | List all zones                          |
-| GET    | /zone/<zone_id>        | List the zone with the corresponding id |
-| GET    | /zone/event/<event_id> | List all zones from of an event         |
-| PATCH  | /zone                  | Update zone info                        |
-| DELETE | /zone                  | Delete zone                             |
+| Method | Endpoint          | Responsability                          |
+| ------ | ----------------- | --------------------------------------- |
+| POST   | /zone             | Create zone                             |
+| GET    | /zone             | List all zones                          |
+| GET    | /zone/<zone_id>   | List the zone with the corresponding id |
+| GET    | /zones/<event_id> | List all zones from of an event         |
+| PATCH  | /zone             | Update zone info                        |
+| DELETE | /zone             | Delete zone                             |
 
 ---
 
@@ -816,12 +816,12 @@ Empty
 
 [ Back to endpoints ](#4-endpoints)
 
-### `/zone/event/<eventId>`
+### `/zone/events/<eventId>`
 
 ### Example of request:
 
 ```
-GET /zone/event/<eventId>
+GET /zone/events/<eventId>
 Host: https://hosteando.herokuapp.com
 Content-type: application/json
 ```
