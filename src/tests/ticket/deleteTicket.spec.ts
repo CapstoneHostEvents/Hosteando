@@ -107,8 +107,6 @@ describe("Create ticket", () => {
       .delete(`/tickets/${response.body.id}`)
       .set("Authorization", `Bearer ${token1}`);
 
-    console.log(response.body)
-
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty("message");
     expect(response.body.message).toBe("Ticket deleted");
