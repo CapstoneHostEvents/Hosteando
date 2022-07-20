@@ -13,12 +13,21 @@ describe("Test for GET method at /users/:id", () => {
     password?: string;
     isAdm: boolean;
   }
+  interface UserLogin {
+    email: string;
+    password?: string;
+  }
 
   let testUser1: User = {
-    name: "Ana",
-    email: "ana@kenzie.com",
-    password: "Aa12345@",
+    name: "miguel",
+    email: "testemiguelito@hotmail.com",
+    password: "123456Ab!",
     isAdm: true,
+  };
+
+  let loginUser1: UserLogin = {
+    email: "testemiguelito@hotmail.com",
+    password: "123456Ab!",
   };
 
   let response1: any;
@@ -37,8 +46,12 @@ describe("Test for GET method at /users/:id", () => {
     await connection.destroy();
   });
 
-  test("Testing a user's listing", async () => {
-    const response = await request(app).get(`/users/${response1.body.id}`);
+  test("Testing an user's listing", async () => {
+    const responseToken = await request(app).post("/login").send(loginUser1);
+    const { token } = responseToken.body;
+    const response = await request(app)
+      .get(`/users/${response1.body.id}`)
+      .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).toEqual(200);
     expect(response.body);

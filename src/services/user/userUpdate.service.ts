@@ -24,8 +24,8 @@ const userUpdateService = async ({
   if (user !== id) {
     throw new AppError("Has to be the same user", 403);
   }
-
-  if (isAdm) throw new AppError("Cannot change isAdm for an User", 403);
+console.log(isAdm)
+  if (isAdm !== undefined) throw new AppError("Cannot change isAdm for an User", 403);
 
   name ? (users.name = name) : users.name;
   email ? (users.email = email) : users.email;
