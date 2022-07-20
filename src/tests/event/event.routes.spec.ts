@@ -123,7 +123,8 @@ describe("Create a Event", () => {
   });
 
   it("Trying to create an event with correct body with no token", async () => {
-    const response = await request(app).post("/events").send(eventCorrect);
+    const response = await request(app).post("/events")
+    .send(eventCorrect);
 
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty("message", "No token found");
@@ -209,7 +210,7 @@ describe("Create a Event", () => {
 
   it("Trying to update an event that doesn't exist", async () => {
     const response = await request(app)
-      .patch(`s/${invalidId}`)
+      .patch(`/events/${invalidId}`)
       .send(eventCorrect)
       .set("Authorization", `Bearer ${tokenAdm}`);
 
