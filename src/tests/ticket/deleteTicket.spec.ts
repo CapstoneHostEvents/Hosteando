@@ -74,7 +74,7 @@ describe("Create ticket", () => {
     const zone: IZoneCreate = {
       name: "camarote",
       price: 200,
-      total_tickets: 4,
+      total_tickets: 5,
       userId: userData.id,
       eventId: eventData.id,
     };
@@ -192,14 +192,57 @@ describe("Create ticket", () => {
 
     expect(response.status).toBe(201);
 
-    ticketData = response.body;
-
     response = await request(app)
       .post("/tickets")
       .send(ticket)
       .set("Authorization", `Bearer ${token1}`);
 
+    ticketData = response.body;
+
     expect(response.status).toBe(201);
+  });
+
+  test("Owner of events should be able to delete tickets from others users", async () => {
+    const ticket2: ITicketRequest = {
+      userId: userData2.id,
+      zoneId: zoneData.id,
+    };
+
+    let response = await request(app)
+      .post("/tickets")
+      .send(ticket2)
+      .set("Authorization", `Bearer ${token2}`);
+
+    expect(response.status).toBe(201);
+
+    response = await request(app)
+      .delete(`/tickets/${response.body.id}`)
+      .set("Authorization", `Bearer ${token1}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("message");
+    expect(response.body.message).toBe("Ticket deleted");
+  });
+
+  test("Send an error message if token is invalid", async () => {
+    const ticket2: ITicketRequest = {
+      userId: userData2.id,
+      zoneId: zoneData.id,
+    };
+
+    let response = await request(app)
+      .post("/tickets")
+      .send(ticket2)
+      .set("Authorization", `Bearer ${token2}`);
+
+    expect(response.status).toBe(201);
+
+    response = await request(app)
+      .delete(`/tickets/${response.body.id}`)
+
+    expect(response.status).toBe(404);
+    expect(response.body.status).toBe("error");
+    expect(response.body).toHaveProperty("message");
   });
 
   test("Send an error message if ticket wasn't found", async () => {
@@ -213,18 +256,16 @@ describe("Create ticket", () => {
     expect(response.body.message).toBe("Ticket not found");
   });
 
-  test("Send an error message if another user tries to delete the ticket", async () => {
-
+  test("Send an error message if another user who didn't create the event or created the ticket tries to delete the ticket", async () => {
 
     const response = await request(app)
       .delete(`/tickets/${ticketData.id}`)
-      .set("Authorization", `Bearer ${token1}`);
+      .set("Authorization", `Bearer ${token2}`);
 
     expect(response.status).toBe(403);
     expect(response.body.status).toBe("error");
     expect(response.body).toHaveProperty("message");
-    expect(response.body.message).toBe("Only the owner of ticket can delete it");
+    expect(response.body.message).toBe("Only the owner of ticket or owner of event can delete it");
   });
-
 
 });

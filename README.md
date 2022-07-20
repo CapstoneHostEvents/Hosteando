@@ -1265,9 +1265,9 @@ Empty
 
 ### Possible errors:
 
-| Error code    | Description                  |
-| ------------- | -----------------------------|
-| 404 not found | The ticket was not found     |
-| 403 forbidden | Only owner can delete ticket |
+| Error code    | Description                                              |
+| ------------- | ---------------------------------------------------------|
+| 404 not found | The ticket was not found                                 |
+| 403 forbidden | Only owner of ticket or who created the event can delete |
 
 ---
