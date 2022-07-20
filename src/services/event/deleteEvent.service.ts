@@ -15,8 +15,6 @@ const deleteEventService = async (
   const event = await eventRepository.findOneBy({
     id: id,
   });
-
-  console.log(event);
   
   if (!event) {
     throw new AppError("Event not found", 404);

@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
+const express_1 = __importDefault(require("express"));
+require("express-async-errors");
+require("reflect-metadata");
+const user_routes_1 = __importDefault(require("./routes/user/user.routes"));
+const login_routes_1 = __importDefault(require("./routes/user/login.routes"));
+const ticket_routes_1 = __importDefault(require("./routes/ticket/ticket.routes"));
+const zone_routes_1 = __importDefault(require("./routes/zone/zone.routes"));
+const email_routes_1 = __importDefault(require("./routes/user/email.routes"));
+const express_error_middleware_1 = require("./middlewares/express-error.middleware");
+const event_routes_1 = __importDefault(require("./routes/event/event.routes"));
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.use("/tickets", ticket_routes_1.default);
+app.use("/events", event_routes_1.default);
+app.use("/zones", zone_routes_1.default);
+app.use("/users", user_routes_1.default);
+app.use("/login", login_routes_1.default);
+app.use("/email", email_routes_1.default);
+app.use(express_error_middleware_1.errorHandler);
+exports.default = app;

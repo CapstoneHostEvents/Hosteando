@@ -25,7 +25,6 @@ const sendEmailUser = async ({ to, subject, text }: IEmailRequest) => {
       console.log("Email sent with success");
     })
     .catch((err) => {
-      console.log(err);
       throw new AppError("Error sendind email, try again", 500);
     });
 };
