@@ -10,21 +10,27 @@ const userUpdateService = async ({
   name,
   email,
   password,
+  user,
 }: IUserUp): Promise<IUser> => {
   const userRepository = AppDataSource.getRepository(User);
 
-  const user = await userRepository.findOne({
+  const users = await userRepository.findOne({
     where: { id },
   });
-  if (!user) {
+  if (!users) {
     throw new AppError("User not found!", 404);
   }
 
-  isAdm ? (user.isAdm = isAdm) : user.isAdm;
-  name ? (user.name = name) : user.name;
-  email ? (user.email = email) : user.email;
-  password ? (user.password = await bcrypt.hash(password, 10)) : user.password;
+  if (user !== id) {
+    throw new AppError("Has to be the same user", 403);
+  }
 
-  return userRepository.save(user);
+  if (isAdm) throw new AppError("Cannot change isAdm for an User", 403);
+
+  name ? (users.name = name) : users.name;
+  email ? (users.email = email) : users.email;
+  password ? (users.password = await bcrypt.hash(password, 10)) : users.password;
+
+  return userRepository.save(users);
 };
 export default userUpdateService;

@@ -1,4 +1,5 @@
 import { AppDataSource } from "../../data-source";
+
 import { DataSource } from "typeorm";
 import app from "../../app";
 import request from "supertest";
@@ -11,21 +12,28 @@ describe("Test for PATCH method at /users/:id", () => {
     name: string;
     email: string;
     password?: string;
-    isAdm: boolean;
+    isAdm?: boolean;
   }
-
-  let testUser1: User = {
-    name: "Ana",
-    email: "ana@kenzie.com",
-    password: "Aa12345@",
+  interface UserLogin {
+    email: string;
+    password?: string;
+  }
+  let testUser: User = {
+    name: "miguel",
+    email: "testemiguel@hotmail.com",
+    password: "123456Ab!",
     isAdm: true,
   };
 
-  let testUser2: User = {
+  let testUser1: User = {
     name: "Maria",
     email: "maria@kenzie.com",
     password: "123456Ab!",
-    isAdm: true,
+  };
+
+  let loginUser: UserLogin = {
+    email: "testemiguel@hotmail.com",
+    password: "123456Ab!",
   };
 
   let response1: any;
@@ -37,7 +45,7 @@ describe("Test for PATCH method at /users/:id", () => {
         console.error("Error during Data Source initialization", err);
       });
 
-    response1 = await request(app).post("/users").send(testUser1);
+    response1 = await request(app).post("/users").send(testUser);
   });
 
   afterAll(async () => {
@@ -45,9 +53,12 @@ describe("Test for PATCH method at /users/:id", () => {
   });
 
   test("Trying to update an user", async () => {
+    const responseToken = await request(app).post("/login").send(loginUser);
+    const { token } = responseToken.body;
     const responsePatch = await request(app)
       .patch(`/users/${response1.body.id}`)
-      .send(testUser2);
+      .send(testUser1)
+      .set("Authorization", `Bearer ${token}`);
 
     const responseGet = await request(app).get(`/users/${response1.body.id}`);
 
@@ -57,16 +68,15 @@ describe("Test for PATCH method at /users/:id", () => {
     expect(responseGet.body).toEqual(
       expect.objectContaining({
         id: responseGet.body.id,
-        name: testUser2.name,
-        email: testUser2.email,
-        isAdm: testUser2.isAdm,
+        name: testUser1.name,
+        email: testUser1.email,
         created_at: responseGet.body.created_at,
         updated_at: responseGet.body.updated_at,
       })
     );
   });
 
-  test("Trying to update a user that doesn't exist", async () => {
+  test("Trying to update an user that doesn't exist", async () => {
     const response = await request(app).get(`/users/1`);
 
     expect(response.status).toEqual(404);
