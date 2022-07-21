@@ -1,5 +1,5 @@
 import { AppDataSource } from "../../data-source";
-import { IZoneCreate, IZoneRequest } from "../../interfaces/zone";
+import { IZoneCreate, IZoneList, IZoneRequest } from "../../interfaces/zone";
 import { Zone } from "../../entities/Zone";
 import { Event } from "../../entities/Event";
 import AppError from "../../errors/app-error";
@@ -10,7 +10,7 @@ const createZoneService = async ({
   total_tickets,
   eventId,
   userId,
-}: IZoneCreate): Promise<Zone> => {
+}: IZoneCreate): Promise<IZoneList> => {
   const zoneRepository = AppDataSource.getRepository(Zone);
   const eventRepository = AppDataSource.getRepository(Event);
 
@@ -37,7 +37,23 @@ const createZoneService = async ({
 
   await zoneRepository.save(zone);
 
-  return zone;
+  const zoneReturned: IZoneList = {
+    ...zone,
+    event: {
+      created_at: zone.event.created_at,
+      id: zone.event.id,
+      date: zone.event.date,
+      description: zone.event.description,
+      name: zone.event.name,
+      user: {
+        id: zone.event.user.id,
+        name: zone.event.user.name,
+        email: zone.event.user.email,
+      },
+    },
+  };
+
+  return zoneReturned;
 };
 
 export default createZoneService;
